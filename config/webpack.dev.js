@@ -6,7 +6,7 @@ module.exports = WebpackMerge(common, {
 	mode: 'development',
 	devtool: 'inline-source-map',
 	devServer: {
-		open: true,
+		open: false,
 		https: false,
 		hot: true,
 		port: 3000,
