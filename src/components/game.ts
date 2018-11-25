@@ -27,16 +27,16 @@ export default class Game {
       this._scene,
     );
 
-    const sphere = BABYLON.MeshBuilder.CreateSphere(
-      'sphere-1',
-      {
-        segments: 16,
-        diameter: 2,
+    const cone = BABYLON.MeshBuilder.CreateCylinder(
+      'cone', {
+        diameterTop: 0,
+        height: 1,
+        tessellation: 96
       },
-      this._scene,
-    );
-    sphere.position.y = 1;
-    new AddLabelToMesh(sphere);
+      this._scene);
+    cone.position.y = 1;
+    cone.rotation.x = -Math.PI/2;
+    new AddLabelToMesh(cone);
 
     this._camera = new BABYLON.TargetCamera(
       'freeCamera-1',
@@ -58,7 +58,33 @@ export default class Game {
 
     this._scene.debugLayer.show();
 
-    this._controls = new Controls(this._scene, sphere);
+    const field = {
+      width: 8,
+      height: 8
+    };
+
+    // todo move to MoveController with controls creation etc.
+    function collisionNormalizer(position: BABYLON.Vector3): BABYLON.Vector3 {
+      const halfWidth = field.width / 2;
+      if (position.x > halfWidth) {
+        position.x = halfWidth;
+      }
+      if (position.x < -halfWidth) {
+        position.x = -halfWidth;
+      }
+
+      const halfHeight = field.height / 2;
+      if (position.z > halfHeight) {
+        position.z = halfHeight;
+      }
+      if (position.z < -halfHeight) {
+        position.z = -halfHeight;
+      }
+
+      return position;
+    }
+
+    this._controls = new Controls(this._scene, cone, collisionNormalizer);
   }
 
   doRender(): void {

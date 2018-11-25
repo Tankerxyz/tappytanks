@@ -11,65 +11,76 @@ export default class Controls {
 
   maxFrame: number = 6;
 
-  constructor(scene: BABYLON.Scene, movableObject: BABYLON.Mesh) {
+  constructor(scene: BABYLON.Scene, movableObject: BABYLON.Mesh, collisionNormalizer: any) {
     this._scene = scene;
 
-    // left
+    // rotate left
     this.addAnimatableAction(this.createAnimatableAction(keycode.codes.left,
       'animation_left',
-      'position.x',
+      'rotation',
       () => {
         return  [{
           frame: 0,
-          value: movableObject.position.x
+          value: new BABYLON.Vector3(movableObject.rotation.x, movableObject.rotation.y, movableObject.rotation.z)
         }, {
           frame: this.maxFrame,
-          value: movableObject.position.x + 1
+          value: new BABYLON.Vector3(
+            movableObject.rotation.x,
+            movableObject.rotation.y,
+            movableObject.rotation.z - Math.PI/2)
         }]
       }, movableObject), movableObject);
 
 
-    // right
+    // rotate right
     this.addAnimatableAction(this.createAnimatableAction(keycode.codes.right,
       'animation_right',
-      'position.x',
+      'rotation',
       () => {
         return  [{
           frame: 0,
-          value: movableObject.position.x
+          value: new BABYLON.Vector3(movableObject.rotation.x, movableObject.rotation.y, movableObject.rotation.z)
         }, {
           frame: this.maxFrame,
-          value: movableObject.position.x - 1
+          value: new BABYLON.Vector3(
+            movableObject.rotation.x,
+            movableObject.rotation.y,
+            movableObject.rotation.z + Math.PI/2)
         }]
       }, movableObject), movableObject);
 
 
-    // up
+    // move forward
     this.addAnimatableAction(this.createAnimatableAction(keycode.codes.up,
       'animation_up',
-      'position.z',
+      'position',
       () => {
         return  [{
           frame: 0,
-          value: movableObject.position.z
+          value: new BABYLON.Vector3(movableObject.position.x, movableObject.position.y, movableObject.position.z)
         }, {
           frame: this.maxFrame,
-          value: movableObject.position.z - 1
+          value: collisionNormalizer(new BABYLON.Vector3(
+            movableObject.position.x - Math.sin(movableObject.rotation.z),
+            movableObject.position.y,
+            movableObject.position.z - Math.cos(movableObject.rotation.z)))
         }]
       }, movableObject), movableObject);
 
-
-    // down
+    // move back
     this.addAnimatableAction(this.createAnimatableAction(keycode.codes.down,
-      'animation_up',
-      'position.z',
+      'animation_down',
+      'position',
       () => {
         return  [{
           frame: 0,
-          value: movableObject.position.z
+          value: new BABYLON.Vector3(movableObject.position.x, movableObject.position.y, movableObject.position.z)
         }, {
           frame: this.maxFrame,
-          value: movableObject.position.z + 1
+          value: collisionNormalizer(new BABYLON.Vector3(
+            movableObject.position.x + Math.sin(movableObject.rotation.z),
+            movableObject.position.y,
+            movableObject.position.z + Math.cos(movableObject.rotation.z)))
         }]
       }, movableObject), movableObject);
   }
@@ -83,14 +94,14 @@ export default class Controls {
   createAnimatableAction(parameter: number,
                          animationName: string,
                          targetProperty: string,
-                         getAnimationKeysFn: () => Array<{frame: number, value: number}>,
+                         getAnimationKeysFn: () => Array<{frame: number, value: BABYLON.Vector3}>,
                          movableObject: BABYLON.Mesh,
                          ) {
     return new AnimatableAction({
       trigger: BABYLON.ActionManager.OnKeyDownTrigger,
       parameter,
     },
-      new BABYLON.Animation(animationName, targetProperty,60, BABYLON.Animation.ANIMATIONTYPE_FLOAT),
+      new BABYLON.Animation(animationName, targetProperty,60, BABYLON.Animation.ANIMATIONTYPE_VECTOR3),
       getAnimationKeysFn,
       this.beginAnimation(movableObject),
       this.maxFrame,
