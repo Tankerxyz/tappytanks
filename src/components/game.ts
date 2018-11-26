@@ -1,6 +1,7 @@
 import * as BABYLON from 'babylonjs';
 import { AddLabelToMesh } from './gui';
 import Controls from './Controls';
+import Field from './Field';
 
 export default class Game {
 
@@ -20,10 +21,11 @@ export default class Game {
   createScene(): void {
     this._scene = new BABYLON.Scene(this._engine);
     this._scene.actionManager = new BABYLON.ActionManager(this._scene);
+    this._scene.debugLayer.show();
 
     this._light = new BABYLON.HemisphericLight(
       'hsLight-1',
-      new BABYLON.Vector3(0, 1, 0),
+      new BABYLON.Vector3(-50, 60, -50),
       this._scene,
     );
 
@@ -36,7 +38,9 @@ export default class Game {
       this._scene);
     cone.position.y = 1;
     cone.rotation.x = -Math.PI/2;
-    new AddLabelToMesh(cone);
+
+
+
 
     this._camera = new BABYLON.TargetCamera(
       'freeCamera-1',
@@ -46,22 +50,7 @@ export default class Game {
     this._camera.setTarget(BABYLON.Vector3.Zero());
     this._camera.attachControl(this._canvas, false);
 
-    const ground = BABYLON.MeshBuilder.CreateGround(
-      'ground-1',
-      {
-        width: 10,
-        height: 10,
-        subdivisions: 4,
-      },
-      this._scene,
-    );
-
-    this._scene.debugLayer.show();
-
-    const field = {
-      width: 8,
-      height: 8
-    };
+    const field = new Field(10, 10, this._scene);
 
     // todo move to MoveController with controls creation etc.
     function collisionNormalizer(position: BABYLON.Vector3): BABYLON.Vector3 {
