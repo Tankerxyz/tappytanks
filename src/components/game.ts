@@ -82,6 +82,7 @@ export default class Game {
     );
   }
 
+  // todo create class Model with height/width etc. necessary props
   createMainCone(): void {
     this._cone = BABYLON.MeshBuilder.CreateCylinder(
       'cone', {

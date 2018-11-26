@@ -13,6 +13,7 @@ export default class Field {
     this._height = height;
 
     this.generateModel(scene);
+    this.createDebugLayerLines(1);
   }
 
   private generateModel(scene: BABYLON.Scene) {
@@ -30,26 +31,25 @@ export default class Field {
       scene);
 
     this._model.material = material;
+  }
 
+  createDebugLayerLines(step: number) {
+    const halfWidth = this.width / 2;
+    const halfHeight = this.height / 2;
 
-    // todo create some debug grid layer
-    const lines = BABYLON.MeshBuilder.CreateLines(
-      'lines',
-      {
-        points: [
-          new BABYLON.Vector3(5, 0, -5),
-          new BABYLON.Vector3(5, 0, 5)]
-      });
+    // start point: -Z(w / 2) AXIS
+    for (let z = -halfWidth; z < halfWidth; z += step) {
 
-    const lines2 = BABYLON.MeshBuilder.CreateLines(
-      'lines',
-      {
-        points: [
-          new BABYLON.Vector3(4, 0, -5),
-          new BABYLON.Vector3(4, 0, 5)]
-      });
-
-    // lines.parent = this._model;
-
+      // start point: X(h / 2) AXIS
+      for (let x = halfHeight; x > -halfHeight; x -= step) {
+        BABYLON.MeshBuilder.CreateLines(
+          'lines',
+          {
+            points: [
+              new BABYLON.Vector3(x, 0, z),
+              new BABYLON.Vector3(x, 0, z * -1)]
+          });
+      }
+    }
   }
 }
