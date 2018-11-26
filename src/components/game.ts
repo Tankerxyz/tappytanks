@@ -12,6 +12,8 @@ export default class Game {
   private _light: BABYLON.Light;
   private _controls: Controls;
 
+  private _cone: BABYLON.Mesh;
+
   constructor(canvasElement: string) {
     this._canvas = document.querySelector(canvasElement) as HTMLCanvasElement;
     this._engine = new BABYLON.Engine(this._canvas, true);
@@ -23,32 +25,9 @@ export default class Game {
     this._scene.actionManager = new BABYLON.ActionManager(this._scene);
     this._scene.debugLayer.show();
 
-    this._light = new BABYLON.HemisphericLight(
-      'hsLight-1',
-      new BABYLON.Vector3(-50, 60, -50),
-      this._scene,
-    );
-
-    const cone = BABYLON.MeshBuilder.CreateCylinder(
-      'cone', {
-        diameterTop: 0,
-        height: 1,
-        tessellation: 96
-      },
-      this._scene);
-    cone.position.y = 1;
-    cone.rotation.x = -Math.PI/2;
-
-
-
-
-    this._camera = new BABYLON.TargetCamera(
-      'freeCamera-1',
-      new BABYLON.Vector3(0, 15, 0),
-      this._scene,
-    );
-    this._camera.setTarget(BABYLON.Vector3.Zero());
-    this._camera.attachControl(this._canvas, false);
+    this.createMainLight();
+    this.createMainCone();
+    this.createMainCamera();
 
     const field = new Field(10, 10, this._scene);
 
@@ -73,7 +52,7 @@ export default class Game {
       return position;
     }
 
-    this._controls = new Controls(this._scene, cone, collisionNormalizer);
+    this._controls = new Controls(this._scene, this._cone, collisionNormalizer);
   }
 
   doRender(): void {
@@ -85,8 +64,34 @@ export default class Game {
     });
   }
 
-  private attachControls(): void {
+  createMainCamera(): void {
+    this._camera = new BABYLON.TargetCamera(
+      'freeCamera-1',
+      new BABYLON.Vector3(0, 15, 0),
+      this._scene,
+    );
+    this._camera.setTarget(BABYLON.Vector3.Zero());
+    this._camera.attachControl(this._canvas, false);
+  }
 
+  createMainLight(): void {
+    this._light = new BABYLON.HemisphericLight(
+      'hsLight-1',
+      new BABYLON.Vector3(-50, 60, -50),
+      this._scene,
+    );
+  }
+
+  createMainCone(): void {
+    this._cone = BABYLON.MeshBuilder.CreateCylinder(
+      'cone', {
+        diameterTop: 0,
+        height: 1,
+        tessellation: 96
+      },
+      this._scene);
+    this._cone.position.y = 1;
+    this._cone.rotation.x = -Math.PI/2;
   }
 
 }
