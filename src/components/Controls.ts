@@ -55,15 +55,28 @@ export default class Controls {
       'animation_up',
       'position',
       () => {
+        let newX = Math.sin(movableObject.rotation.z);
+        if (Math.abs(newX) === 1) {
+          newX = newX < 0 ? newX - 1 : newX + 1;
+        }
+
+        let newZ = Math.cos(movableObject.rotation.z);
+        if (Math.abs(newZ) === 1) {
+          newZ = newZ < 0 ? newZ - 1 : newZ + 1;
+        }
+
+        console.log(Math.sin(movableObject.rotation.z), Math.cos(movableObject.rotation.z));
+
+
         return  [{
           frame: 0,
           value: new BABYLON.Vector3(movableObject.position.x, movableObject.position.y, movableObject.position.z)
         }, {
           frame: this.maxFrame,
           value: collisionNormalizer(new BABYLON.Vector3(
-            movableObject.position.x - Math.sin(movableObject.rotation.z),
+            movableObject.position.x - newX,
             movableObject.position.y,
-            movableObject.position.z - Math.cos(movableObject.rotation.z)))
+            movableObject.position.z - newZ), movableObject.position)
         }]
       }, movableObject), movableObject);
 
@@ -72,15 +85,26 @@ export default class Controls {
       'animation_down',
       'position',
       () => {
+        let newX = Math.sin(movableObject.rotation.z);
+        if (Math.abs(newX) === 1) {
+          newX = newX < 0 ? newX - 1 : newX + 1;
+        }
+
+        let newZ = Math.cos(movableObject.rotation.z);
+        if (Math.abs(newZ) === 1) {
+          newZ = newZ < 0 ? newZ - 1 : newZ + 1;
+        }
+
+
         return  [{
           frame: 0,
           value: new BABYLON.Vector3(movableObject.position.x, movableObject.position.y, movableObject.position.z)
         }, {
           frame: this.maxFrame,
           value: collisionNormalizer(new BABYLON.Vector3(
-            movableObject.position.x + Math.sin(movableObject.rotation.z),
+            movableObject.position.x + newX,
             movableObject.position.y,
-            movableObject.position.z + Math.cos(movableObject.rotation.z)))
+            movableObject.position.z + newZ), movableObject.position)
         }]
       }, movableObject), movableObject);
   }

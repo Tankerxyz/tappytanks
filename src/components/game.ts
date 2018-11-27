@@ -32,21 +32,15 @@ export default class Game {
     const field = new Field(10, 10, this._scene);
 
     // todo move to MoveController with controls creation etc.
-    function collisionNormalizer(position: BABYLON.Vector3): BABYLON.Vector3 {
+    function collisionNormalizer(position: BABYLON.Vector3, prevPosition: BABYLON.Vector3): BABYLON.Vector3 {
       const halfWidth = field.width / 2;
-      if (position.x > halfWidth) {
-        position.x = halfWidth;
-      }
-      if (position.x < -halfWidth) {
-        position.x = -halfWidth;
+      if (position.x > halfWidth || position.x < -halfWidth) {
+        position.x = prevPosition.x;
       }
 
       const halfHeight = field.height / 2;
-      if (position.z > halfHeight) {
-        position.z = halfHeight;
-      }
-      if (position.z < -halfHeight) {
-        position.z = -halfHeight;
+      if (position.z > halfHeight || position.z < -halfHeight) {
+        position.z = prevPosition.z;
       }
 
       return position;
