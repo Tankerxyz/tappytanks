@@ -1,6 +1,5 @@
 import * as BABYLON from 'babylonjs';
 import keycode from 'keycode';
-import Action from './Action';
 import AnimatableAction from './AnimatableAction';
 
 import { normalizeNewPositionFromRotationZ } from '../utils';
@@ -21,7 +20,7 @@ export default class Controls {
       'animation_left',
       'rotation',
       () => {
-        const { x, y, z } = movableObject.position;
+        const { x, y, z } = movableObject.rotation;
 
         return  [{
           frame: 0,
@@ -38,7 +37,7 @@ export default class Controls {
       'animation_right',
       'rotation',
       () => {
-        const { x, y, z } = movableObject.position;
+        const { x, y, z } = movableObject.rotation;
 
         return  [{
           frame: 0,
