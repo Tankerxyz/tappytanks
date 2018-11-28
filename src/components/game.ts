@@ -2,6 +2,7 @@ import * as BABYLON from 'babylonjs';
 import { AddLabelToMesh } from './gui';
 import Controls from './Controls';
 import Field from './Field';
+import MoveController from './MoveController';
 
 export default class Game {
 
@@ -10,9 +11,10 @@ export default class Game {
   private _scene: BABYLON.Scene;
   private _camera: BABYLON.TargetCamera;
   private _light: BABYLON.Light;
-  private _controls: Controls;
 
   private _cone: BABYLON.Mesh;
+
+  private _moveController: MoveController;
 
   constructor(canvasElement: string) {
     this._canvas = document.querySelector(canvasElement) as HTMLCanvasElement;
@@ -29,24 +31,10 @@ export default class Game {
     this.createMainCone();
     this.createMainCamera();
 
-    const field = new Field(10, 10, this._scene);
-
-    // todo move to MoveController with controls creation etc.
-    function collisionNormalizer(position: BABYLON.Vector3, prevPosition: BABYLON.Vector3): BABYLON.Vector3 {
-      const halfWidth = field.width / 2;
-      if (position.x > halfWidth || position.x < -halfWidth) {
-        position.x = prevPosition.x;
-      }
-
-      const halfHeight = field.height / 2;
-      if (position.z > halfHeight || position.z < -halfHeight) {
-        position.z = prevPosition.z;
-      }
-
-      return position;
-    }
-
-    this._controls = new Controls(this._scene, this._cone, collisionNormalizer);
+    this._moveController = new MoveController(
+      this._scene,
+      new Field(10, 10, this._scene),
+      this._cone);
   }
 
   doRender(): void {
