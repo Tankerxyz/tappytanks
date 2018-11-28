@@ -21,15 +21,14 @@ export default class Controls {
       'animation_left',
       'rotation',
       () => {
+        const { x, y, z } = movableObject.position;
+
         return  [{
           frame: 0,
-          value: new BABYLON.Vector3(movableObject.rotation.x, movableObject.rotation.y, movableObject.rotation.z)
+          value: new BABYLON.Vector3(x, y, z)
         }, {
           frame: this.maxFrame,
-          value: new BABYLON.Vector3(
-            movableObject.rotation.x,
-            movableObject.rotation.y,
-            movableObject.rotation.z - Math.PI/2)
+          value: new BABYLON.Vector3(x, y, z - Math.PI/2)
         }]
       }, movableObject), movableObject);
 
@@ -39,15 +38,14 @@ export default class Controls {
       'animation_right',
       'rotation',
       () => {
+        const { x, y, z } = movableObject.position;
+
         return  [{
           frame: 0,
-          value: new BABYLON.Vector3(movableObject.rotation.x, movableObject.rotation.y, movableObject.rotation.z)
+          value: new BABYLON.Vector3(x, y, z)
         }, {
           frame: this.maxFrame,
-          value: new BABYLON.Vector3(
-            movableObject.rotation.x,
-            movableObject.rotation.y,
-            movableObject.rotation.z + Math.PI/2)
+          value: new BABYLON.Vector3(x, y, z + Math.PI/2)
         }]
       }, movableObject), movableObject);
 
@@ -57,17 +55,15 @@ export default class Controls {
       'animation_up',
       'position',
       () => {
+        const { x, y, z } = movableObject.position;
         const { newX, newZ } = normalizeNewPositionFromRotationZ(movableObject.rotation.z);
 
         return  [{
           frame: 0,
-          value: new BABYLON.Vector3(movableObject.position.x, movableObject.position.y, movableObject.position.z)
+          value: new BABYLON.Vector3(x, y, z)
         }, {
           frame: this.maxFrame,
-          value: collisionNormalizer(new BABYLON.Vector3(
-            movableObject.position.x - newX,
-            movableObject.position.y,
-            movableObject.position.z - newZ), movableObject.position)
+          value: collisionNormalizer(new BABYLON.Vector3(x - newX, y, z - newZ), movableObject.position)
         }]
       }, movableObject), movableObject);
 
@@ -76,17 +72,15 @@ export default class Controls {
       'animation_down',
       'position',
       () => {
+        const { x, y, z } = movableObject.position;
         const { newX, newZ } = normalizeNewPositionFromRotationZ(movableObject.rotation.z);
 
-        return  [{
+        return [{
           frame: 0,
-          value: new BABYLON.Vector3(movableObject.position.x, movableObject.position.y, movableObject.position.z)
+          value: new BABYLON.Vector3(x, y, z)
         }, {
           frame: this.maxFrame,
-          value: collisionNormalizer(new BABYLON.Vector3(
-            movableObject.position.x + newX,
-            movableObject.position.y,
-            movableObject.position.z + newZ), movableObject.position)
+          value: collisionNormalizer(new BABYLON.Vector3(x + newX, y,z + newZ), movableObject.position)
         }]
       }, movableObject), movableObject);
   }
