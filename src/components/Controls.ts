@@ -3,6 +3,8 @@ import keycode from 'keycode';
 import Action from './Action';
 import AnimatableAction from './AnimatableAction';
 
+import { normalizeNewPositionFromRotationZ } from '../utils';
+
 export default class Controls {
   _scene: BABYLON.Scene;
   actions: Array<AnimatableAction> = [];
@@ -55,18 +57,7 @@ export default class Controls {
       'animation_up',
       'position',
       () => {
-        let newX = Math.sin(movableObject.rotation.z);
-        if (Math.abs(newX) === 1) {
-          newX = newX < 0 ? newX - 1 : newX + 1;
-        }
-
-        let newZ = Math.cos(movableObject.rotation.z);
-        if (Math.abs(newZ) === 1) {
-          newZ = newZ < 0 ? newZ - 1 : newZ + 1;
-        }
-
-        console.log(Math.sin(movableObject.rotation.z), Math.cos(movableObject.rotation.z));
-
+        const { newX, newZ } = normalizeNewPositionFromRotationZ(movableObject.rotation.z);
 
         return  [{
           frame: 0,
@@ -85,16 +76,7 @@ export default class Controls {
       'animation_down',
       'position',
       () => {
-        let newX = Math.sin(movableObject.rotation.z);
-        if (Math.abs(newX) === 1) {
-          newX = newX < 0 ? newX - 1 : newX + 1;
-        }
-
-        let newZ = Math.cos(movableObject.rotation.z);
-        if (Math.abs(newZ) === 1) {
-          newZ = newZ < 0 ? newZ - 1 : newZ + 1;
-        }
-
+        const { newX, newZ } = normalizeNewPositionFromRotationZ(movableObject.rotation.z);
 
         return  [{
           frame: 0,
