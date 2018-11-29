@@ -12,7 +12,7 @@ export default class Controls {
 
   maxFrame: number = 6;
 
-  constructor(scene: BABYLON.Scene, movableObject: BABYLON.Mesh, collisionNormalizer: any) {
+  constructor(scene: BABYLON.Scene, movableObject: BABYLON.Mesh, camera: any, collisionNormalizer: any) {
     this._scene = scene;
 
     // rotate left
@@ -21,6 +21,11 @@ export default class Controls {
       'rotation',
       () => {
         const { x, y, z } = movableObject.rotation;
+
+
+        // camera.setPosition(new BABYLON.Vector3(0, 0, 5));
+        camera.position.x = -7;
+        // camera.alpha = 97.389;
 
         return  [{
           frame: 0,

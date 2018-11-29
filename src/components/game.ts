@@ -29,12 +29,14 @@ export default class Game {
 
     this.createMainLight();
     this.createMainCone();
-    this.createMainCamera();
+    this.createMainCamera(this._cone);
 
     this._moveController = new MoveController(
       this._scene,
-      new Field(10, 10, this._scene),
-      this._cone);
+      new Field(18, 18, this._scene),
+      this._cone,
+      this._camera
+      );
   }
 
   doRender(): void {
@@ -46,14 +48,32 @@ export default class Game {
     });
   }
 
-  createMainCamera(): void {
-    this._camera = new BABYLON.TargetCamera(
+  createMainCamera(lockedTarget: BABYLON.Mesh): void {
+    // this._camera = new BABYLON.ArcFollowCamera(
+    //   'freeCamera-1',
+    //   95.815,
+    //   // 97.389,
+    //   0.7,
+    //   10,
+    //   // new BABYLON.Vector3(0, 6, 8),
+    //   lockedTarget,
+    //   this._scene,
+    // );
+    // this._camera.inertia = 100;
+    this._camera = new BABYLON.FollowCamera(
       'freeCamera-1',
-      new BABYLON.Vector3(0, 15, 0),
+      new BABYLON.Vector3(0, 6, 8),
       this._scene,
+      lockedTarget,
     );
+
+    (this._camera as any).cameraAcceleration = 0.25;
+    console.log(this._camera);
+    (window as any).camera = this._camera;
+    this._camera.inertia = 0;
+
     this._camera.setTarget(BABYLON.Vector3.Zero());
-    this._camera.attachControl(this._canvas, false);
+    // this._camera.attachControl(this._canvas, false);
   }
 
   createMainLight(): void {
