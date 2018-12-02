@@ -22,8 +22,6 @@ export default class AnimatableAction extends Action {
       this.animation.setKeys(getAnimationKeysFn());
 
       beginAnimation([[this.animation], 0, maxFrame, false, 1, () => {
-        this.animation.setKeys(getAnimationKeysFn());
-
         onAnimationEnd();
       }]);
     });
