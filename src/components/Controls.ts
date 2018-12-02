@@ -22,10 +22,29 @@ export default class Controls {
       () => {
         const { x, y, z } = movableObject.rotation;
 
+        const newCosZ = ~~Math.cos(z - Math.PI/2);
+        const newSinZ = ~~Math.sin(z - Math.PI/2);
 
-        // camera.setPosition(new BABYLON.Vector3(0, 0, 5));
-        camera.position.x = -7;
-        // camera.alpha = 97.389;
+        // UP
+        if (newSinZ === 0 && newCosZ === 1) {
+          camera.position.x = movableObject.position.x;
+          camera.position.z = movableObject.position.z + 8;
+        }
+        // RIGHT
+        else if (newSinZ === 1 && newCosZ === 0) {
+          camera.position.x = movableObject.position.x - 8;
+          camera.position.z = movableObject.position.z;
+        }
+        // DOWN
+        else if (newSinZ === -1 && newCosZ === 0) {
+          camera.position.x = movableObject.position.x;
+          camera.position.z = movableObject.position.z - 8;
+        }
+        // LEFT
+        else if (newSinZ === 0 && newCosZ === -1) {
+          camera.position.x = movableObject.position.x + 8;
+          camera.position.z = movableObject.position.z;
+        }
 
         return  [{
           frame: 0,
