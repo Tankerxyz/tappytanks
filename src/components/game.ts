@@ -54,12 +54,14 @@ export default class Game {
       'freeCamera-1',
       new BABYLON.Vector3(0, 6, 8),
       this._scene,
-      lockedTarget,
+      lockedTarget
     );
 
-    (this._camera as any).cameraAcceleration = 0.01;
+    (this._camera as any).cameraAcceleration = 0.04;
+    (this._camera as any).radius = 6;
+    (this._camera as any).heightOffset = 3;
+
     (window as any).camera = this._camera;
-    this._camera.inertia = 0;
   }
 
   createMainLight(): void {

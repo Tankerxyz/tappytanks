@@ -22,29 +22,7 @@ export default class Controls {
       () => {
         const { x, y, z } = movableObject.rotation;
 
-        const newCosZ = ~~Math.cos(z - Math.PI/2);
-        const newSinZ = ~~Math.sin(z - Math.PI/2);
-
-        // UP
-        if (newSinZ === 0 && newCosZ === 1) {
-          camera.position.x = movableObject.position.x;
-          camera.position.z = movableObject.position.z + 8;
-        }
-        // RIGHT
-        else if (newSinZ === 1 && newCosZ === 0) {
-          camera.position.x = movableObject.position.x - 8;
-          camera.position.z = movableObject.position.z;
-        }
-        // DOWN
-        else if (newSinZ === -1 && newCosZ === 0) {
-          camera.position.x = movableObject.position.x;
-          camera.position.z = movableObject.position.z - 8;
-        }
-        // LEFT
-        else if (newSinZ === 0 && newCosZ === -1) {
-          camera.position.x = movableObject.position.x + 8;
-          camera.position.z = movableObject.position.z;
-        }
+        camera.rotationOffset -= 90;
 
         return  [{
           frame: 0,
@@ -62,6 +40,8 @@ export default class Controls {
       'rotation',
       () => {
         const { x, y, z } = movableObject.rotation;
+
+        camera.rotationOffset += 90;
 
         return  [{
           frame: 0,
