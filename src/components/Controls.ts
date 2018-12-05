@@ -66,7 +66,7 @@ export default class Controls {
           value: new BABYLON.Vector3(x, y, z)
         }, {
           frame: this.maxFrame,
-          value: collisionNormalizer(new BABYLON.Vector3(x - newX, y, z - newZ), movableObject.position)
+          value: collisionNormalizer(new BABYLON.Vector3(Math.round(x - newX), y, Math.round(z - newZ)), movableObject.position)
         }]
       }, movableObject), movableObject);
 
@@ -83,7 +83,7 @@ export default class Controls {
           value: new BABYLON.Vector3(x, y, z)
         }, {
           frame: this.maxFrame,
-          value: collisionNormalizer(new BABYLON.Vector3(x + newX, y,z + newZ), movableObject.position)
+          value: collisionNormalizer(new BABYLON.Vector3(Math.round(x + newX), y,Math.round(z + newZ)), movableObject.position)
         }]
       }, movableObject), movableObject);
   }
