@@ -1,19 +1,52 @@
 import * as BABYLON from 'babylonjs';
 
+interface FieldControllerOpts {
+  width: number;
+  height: number;
+  debug?: boolean;
+  fieldWalls?: Array<FieldWall>;
+}
+
+interface FieldWall {
+  position: BABYLON.Vector3;
+  size: number;
+}
+
 export default class Field {
   private readonly _width: number;
   get width() { return this._width; }
   private readonly _height: number;
   get height() { return this._height; }
 
+  private readonly _scene: BABYLON.Scene;
   private _model: BABYLON.Mesh;
+  private _walls: Array<BABYLON.Mesh> = [];
 
-  constructor(width: number, height: number, scene: BABYLON.Scene) {
-    this._width = width;
-    this._height = height;
+  constructor(options: FieldControllerOpts, scene: BABYLON.Scene) {
+    this._width = options.width;
+    this._height = options.height;
+    this._scene = scene;
 
     this.generateModel(scene);
-    this.createDebugLayerLines(2);
+
+    if (options.debug) {
+      this.createDebugLayerLines(2);
+    }
+
+    if (options.fieldWalls) {
+      this.generateFieldWalls(options.fieldWalls);
+    }
+  }
+
+  generateFieldWalls(fieldWalls: Array<FieldWall>) {
+    fieldWalls.forEach((wall, i) => {
+      const fieldWall = BABYLON.MeshBuilder.CreateBox(`fieldWall${i}`, {
+        size: wall.size
+      }, this._scene);
+      fieldWall.position = wall.position;
+
+      this._walls.push(fieldWall);
+    });
   }
 
   private generateModel(scene: BABYLON.Scene) {

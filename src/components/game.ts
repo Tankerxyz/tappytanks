@@ -30,11 +30,27 @@ export default class Game {
     this.createMainLight();
     this.createMainCone();
     this.createMainCamera(this._cone);
-    this.createTempSceneBox();
 
     this._moveController = new MoveController(
       this._scene,
-      new Field(18, 18, this._scene),
+      new Field({
+        width: 18,
+        height: 18,
+        debug: true,
+        fieldWalls: [{
+          position: new BABYLON.Vector3(-2, 1, -2),
+          size: 2
+        }, {
+          position: new BABYLON.Vector3(-8, 1, 2),
+          size: 2
+        }, {
+          position: new BABYLON.Vector3(-8, 1, 8),
+          size: 2
+        }, {
+          position: new BABYLON.Vector3(6, 1, 0),
+          size: 2
+        }]
+      }, this._scene),
       this._cone,
       this._camera
       );
@@ -83,13 +99,6 @@ export default class Game {
       this._scene);
     this._cone.position.y = 1;
     this._cone.rotation.x = -Math.PI/2;
-  }
-
-  createTempSceneBox(): void {
-    const tempObj = BABYLON.MeshBuilder.CreateBox('box', {
-      size: 2
-    }, this._scene);
-    tempObj.position = new BABYLON.Vector3(-2, 1, -2);
   }
 
 }
