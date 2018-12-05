@@ -38,7 +38,7 @@ export default class Field {
     }
   }
 
-  generateFieldWalls(fieldWalls: Array<FieldWall>) {
+  private generateFieldWalls(fieldWalls: Array<FieldWall>) {
     fieldWalls.forEach((wall, i) => {
       const fieldWall = BABYLON.MeshBuilder.CreateBox(`fieldWall${i}`, {
         size: wall.size
@@ -66,7 +66,7 @@ export default class Field {
     this._model.material = material;
   }
 
-  createDebugLayerLines(step: number) {
+  private createDebugLayerLines(step: number) {
     const halfWidth = this.width / 2;
     const halfHeight = this.height / 2;
 
@@ -90,5 +90,14 @@ export default class Field {
             new BABYLON.Vector3(-halfHeight, 0.01, x)]
         });
     }
+  }
+
+
+  public getWallsByPosition(position: BABYLON.Vector3): Array<BABYLON.Mesh> {
+    return this._walls.filter((wall) => {
+      if (position.x === wall.position.x && position.z === wall.position.z) {
+        return wall;
+      }
+    });
   }
 }

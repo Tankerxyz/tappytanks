@@ -25,6 +25,12 @@ export default class MoveController {
       position.z = prevPosition.z;
     }
 
+    const impactedWalls = this._field.getWallsByPosition(position);
+    if (impactedWalls.length) {
+      position.z = prevPosition.z;
+      position.x = prevPosition.x;
+    }
+
     return position;
   }
 }
