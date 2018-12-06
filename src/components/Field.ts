@@ -106,4 +106,12 @@ export default class Field {
       }
     });
   }
+
+  public getModelsByPosition(position: BABYLON.Vector3): Array<BABYLON.Mesh> {
+    return this._models.filter((model) => {
+      if (position.x === model.position.x && position.z === model.position.z) {
+        return model;
+      }
+    })
+  }
 }
