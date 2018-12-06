@@ -49,7 +49,13 @@ export default class Game {
         }, {
           position: new BABYLON.Vector3(6, 1, 0),
           size: 2
-        }]
+        }],
+        models: [
+          this.createCone(new BABYLON.Vector3(4, 1, 6)),
+          this.createCone(new BABYLON.Vector3(2, 1, 8)),
+          this.createCone(new BABYLON.Vector3(-4, 1, -6)),
+          this.createCone(new BABYLON.Vector3(4, 1, -4)),
+        ]
       }, this._scene),
       this._cone,
       this._camera
@@ -86,6 +92,21 @@ export default class Game {
       new BABYLON.Vector3(-50, 60, -50),
       this._scene,
     );
+  }
+
+  // todo move to global controller to handle models creation
+  createCone(position: BABYLON.Vector3): BABYLON.Mesh {
+    const cone =  BABYLON.MeshBuilder.CreateCylinder(
+      'cone', {
+        diameterTop: 0,
+        height: 1,
+        tessellation: 96
+      },
+      this._scene);
+    cone.position = position;
+    cone.rotation.x = -Math.PI/2;
+
+    return cone;
   }
 
   // todo create class Model with height/width etc. necessary props

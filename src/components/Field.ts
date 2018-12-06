@@ -5,6 +5,7 @@ interface FieldControllerOpts {
   height: number;
   debug?: boolean;
   fieldWalls?: Array<FieldWall>;
+  models?: Array<BABYLON.Mesh>;
 }
 
 interface FieldWall {
@@ -21,6 +22,7 @@ export default class Field {
   private readonly _scene: BABYLON.Scene;
   private _model: BABYLON.Mesh;
   private _walls: Array<BABYLON.Mesh> = [];
+  private _models: Array<BABYLON.Mesh> = [];
 
   constructor(options: FieldControllerOpts, scene: BABYLON.Scene) {
     this._width = options.width;
@@ -35,6 +37,10 @@ export default class Field {
 
     if (options.fieldWalls) {
       this.generateFieldWalls(options.fieldWalls);
+    }
+
+    if (options.models) {
+      this._models = options.models;
     }
   }
 
