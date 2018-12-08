@@ -1,11 +1,12 @@
 import * as BABYLON from 'babylonjs';
+import Player from './Player';
 
 interface FieldControllerOpts {
   width: number;
   height: number;
   debug?: boolean;
   fieldWalls?: Array<FieldWall>;
-  models?: Array<BABYLON.Mesh>;
+  restPlayers?: Array<Player>;
 }
 
 interface FieldWall {
@@ -22,7 +23,7 @@ export default class Field {
   private readonly _scene: BABYLON.Scene;
   private _model: BABYLON.Mesh;
   private _walls: Array<BABYLON.Mesh> = [];
-  private _models: Array<BABYLON.Mesh> = [];
+  private _restPlayers: Array<Player> = [];
 
   constructor(options: FieldControllerOpts, scene: BABYLON.Scene) {
     this._width = options.width;
@@ -39,8 +40,8 @@ export default class Field {
       this.generateFieldWalls(options.fieldWalls);
     }
 
-    if (options.models) {
-      this._models = options.models;
+    if (options.restPlayers) {
+      this._restPlayers = options.restPlayers;
     }
   }
 
@@ -107,11 +108,12 @@ export default class Field {
     });
   }
 
-  public getModelsByPosition(position: BABYLON.Vector3): Array<BABYLON.Mesh> {
-    return this._models.filter((model) => {
+  public getPlayerModelByPosition(position: BABYLON.Vector3): Array<Player> {
+    return this._restPlayers.filter((player) => {
+      const model = player.model;
       if (position.x === model.position.x && position.z === model.position.z) {
         return model;
       }
-    })
+    });
   }
 }

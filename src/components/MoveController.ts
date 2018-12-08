@@ -35,7 +35,7 @@ export default class MoveController {
       return position;
     }
 
-    const impactedModels = this._field.getModelsByPosition(position);
+    const impactedModels = this._field.getPlayerModelByPosition(position);
     if (impactedModels.length) {
       position.z = prevPosition.z;
       position.x = prevPosition.x;

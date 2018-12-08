@@ -16,6 +16,7 @@ export default class Game {
   private _moveController: MoveController;
 
   private _player: Player;
+  private _restPlayers: Array<Player>;
 
   constructor(canvasElement: string) {
     this._canvas = document.querySelector(canvasElement) as HTMLCanvasElement;
@@ -31,6 +32,7 @@ export default class Game {
     this.createMainLight();
     this.createMainPlayer();
     this.createMainCamera(this._player.model);
+    this.createRestPlayers();
 
     this._moveController = new MoveController(
       this._scene,
@@ -51,12 +53,7 @@ export default class Game {
           position: new BABYLON.Vector3(6, 1, 0),
           size: 2
         }],
-        models: [
-          this.createCone(new BABYLON.Vector3(4, 1, 6)),
-          this.createCone(new BABYLON.Vector3(2, 1, 8)),
-          this.createCone(new BABYLON.Vector3(-4, 1, -6)),
-          this.createCone(new BABYLON.Vector3(4, 1, -4)),
-        ]
+        restPlayers: this._restPlayers,
       }, this._scene),
       this._player,
       this._camera
@@ -118,6 +115,15 @@ export default class Game {
 
   createMainPlayer(): void {
     this._player = this.createPlayer(new BABYLON.Vector3(0, 1, 0));
+  }
+
+  createRestPlayers(): void {
+    this._restPlayers = [
+      this.createPlayer(new BABYLON.Vector3(4, 1, 6)),
+      this.createPlayer(new BABYLON.Vector3(2, 1, 8)),
+      this.createPlayer(new BABYLON.Vector3(-4, 1, -6)),
+      this.createPlayer(new BABYLON.Vector3(4, 1, -4)),
+    ];
   }
 
 }
