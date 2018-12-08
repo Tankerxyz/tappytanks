@@ -6,6 +6,7 @@ interface PlayerOptions {
 
 export default class Player {
   private readonly _model: BABYLON.Mesh;
+  get model() { return this._model; }
 
   constructor(options: PlayerOptions) {
     this._model = options.model;

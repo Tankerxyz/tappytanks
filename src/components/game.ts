@@ -3,6 +3,7 @@ import { AddLabelToMesh } from './gui';
 import Controls from './Controls';
 import Field from './Field';
 import MoveController from './MoveController';
+import Player from './Player';
 
 export default class Game {
 
@@ -12,9 +13,9 @@ export default class Game {
   private _camera: BABYLON.TargetCamera;
   private _light: BABYLON.Light;
 
-  private _cone: BABYLON.Mesh;
-
   private _moveController: MoveController;
+
+  private _player: Player;
 
   constructor(canvasElement: string) {
     this._canvas = document.querySelector(canvasElement) as HTMLCanvasElement;
@@ -28,8 +29,8 @@ export default class Game {
     this._scene.debugLayer.show();
 
     this.createMainLight();
-    this.createMainCone();
-    this.createMainCamera(this._cone);
+    this.createMainPlayer();
+    this.createMainCamera(this._player.model);
 
     this._moveController = new MoveController(
       this._scene,
@@ -57,7 +58,7 @@ export default class Game {
           this.createCone(new BABYLON.Vector3(4, 1, -4)),
         ]
       }, this._scene),
-      this._cone,
+      this._player,
       this._camera
       );
   }
@@ -68,6 +69,12 @@ export default class Game {
     });
     window.addEventListener('resize', () => {
       this._engine.resize();
+    });
+  }
+
+  createPlayer(position: BABYLON.Vector3): Player {
+    return new Player({
+      model: this.createCone(position),
     });
   }
 
@@ -109,17 +116,8 @@ export default class Game {
     return cone;
   }
 
-  // todo create class Model with height/width etc. necessary props
-  createMainCone(): void {
-    this._cone = BABYLON.MeshBuilder.CreateCylinder(
-      'cone', {
-        diameterTop: 0,
-        height: 1,
-        tessellation: 96
-      },
-      this._scene);
-    this._cone.position.y = 1;
-    this._cone.rotation.x = -Math.PI/2;
+  createMainPlayer(): void {
+    this._player = this.createPlayer(new BABYLON.Vector3(0, 1, 0));
   }
 
 }
