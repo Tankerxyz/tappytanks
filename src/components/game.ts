@@ -5,6 +5,8 @@ import Field from './Field';
 import MoveController from './MoveController';
 import Player from './Player';
 
+import io from 'socket.io-client';
+
 export default class Game {
 
   private _canvas: HTMLCanvasElement;
@@ -58,6 +60,22 @@ export default class Game {
       this._player,
       this._camera
       );
+
+
+    // todo use as configured io and socket for whole app
+    const socket = io('ws://localhost:3000', {
+      forceNew: true,
+      path: '/socket.io/'
+    });
+
+    socket.on('connect', () => console.log('WS: Accept a connection.'));
+
+    socket.on('A', (data: any) => {
+      console.log(data);  // { foo: 'bar' }
+      setTimeout(() => {
+        socket.emit('B', { foo: 'baz' });
+      }, 1000);
+    });
   }
 
   doRender(): void {
