@@ -65,6 +65,18 @@ export default class Game {
     socket.on('field', (field: FieldControllerOpts) => {
       this.createField(field);
     });
+
+    socket.on('create-player-success', (data: any) => {
+      console.log('create-player-success: ', data);
+    });
+
+    socket.on('player-joined', (data: any) => {
+      console.log('player-joined: ', data);
+    });
+
+    socket.on('player-leaved', (data: any) => {
+      console.log('player-leaved: ', data);
+    });
   }
 
   doRender(): void {
