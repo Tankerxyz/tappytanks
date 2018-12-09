@@ -19,7 +19,7 @@ export default class Game {
   private _moveController: MoveController;
 
   private _player: Player;
-  private _restPlayers: Array<Player>;
+  private _restPlayers: Array<Player> = [];
 
   constructor(canvasElement: string) {
     this._canvas = document.querySelector(canvasElement) as HTMLCanvasElement;
@@ -63,19 +63,41 @@ export default class Game {
     socket.on('connect', () => console.log('WS: Accept a connection.'));
 
     socket.on('field', (field: FieldControllerOpts) => {
-      this.createField(field);
+      this.createField({
+        width: field.width,
+        height: field.height,
+        debug: field.debug,
+        restPlayers: this._restPlayers
+      });
+
+      if (field.restPlayers) {
+        field.restPlayers.forEach(this.addPlayer.bind(this));
+      }
     });
 
-    socket.on('create-player-success', (data: any) => {
-      console.log('create-player-success: ', data);
+    socket.on('create-player-success', (player: any) => {
+      console.log('create-player-success: ', player);
+      const { x, y, z } = player.position;
+      this._player.id = player.id;
+      this._player.setPosition(new BABYLON.Vector3(x, y, z));
+
+      if (!this._moveController) {
+        this.createMoveController();
+      }
+
     });
 
-    socket.on('player-joined', (data: any) => {
-      console.log('player-joined: ', data);
+    socket.on('player-joined', (player: any) => {
+      console.log('player-joined: ', player);
+
+      this.addPlayer(player);
+
     });
 
-    socket.on('player-leaved', (data: any) => {
-      console.log('player-leaved: ', data);
+    socket.on('player-leaved', (playerId: string) => {
+      console.log('player-leaved: ', playerId);
+
+      this.removePlayer(playerId);
     });
   }
 
@@ -92,9 +114,10 @@ export default class Game {
     this._field = new Field(options, this._scene);
   }
 
-  createPlayer(position: BABYLON.Vector3): Player {
+  createPlayer(position: BABYLON.Vector3, id?: string): Player {
     return new Player({
       model: this.createCone(position),
+      id: id
     });
   }
 
@@ -140,15 +163,6 @@ export default class Game {
     this._player = this.createPlayer(new BABYLON.Vector3(0, 1, 0));
   }
 
-  createRestPlayers(): void {
-    this._restPlayers = [
-      this.createPlayer(new BABYLON.Vector3(4, 1, 6)),
-      this.createPlayer(new BABYLON.Vector3(2, 1, 8)),
-      this.createPlayer(new BABYLON.Vector3(-4, 1, -6)),
-      this.createPlayer(new BABYLON.Vector3(4, 1, -4)),
-    ];
-  }
-
   createMoveController(): void {
     this._moveController = new MoveController(
       this._scene,
@@ -156,6 +170,18 @@ export default class Game {
       this._player,
       this._camera
     );
+  }
+
+  addPlayer(player: any): void {
+    const { x, y, z } = player.position;
+
+    this._restPlayers.push(this.createPlayer(new BABYLON.Vector3(x, y, z), player.id));
+  }
+
+  removePlayer(playerId: string): void {
+    const player = this._restPlayers.filter((p) => p.id === playerId)[0];
+    this._restPlayers.splice(this._restPlayers.indexOf(player), 1);
+    player.model.dispose();
   }
 
 }
