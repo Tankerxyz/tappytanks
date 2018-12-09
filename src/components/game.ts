@@ -24,8 +24,14 @@ export default class Game {
   constructor(canvasElement: string) {
     this._canvas = document.querySelector(canvasElement) as HTMLCanvasElement;
     this._engine = new BABYLON.Engine(this._canvas, true);
+
+    this.init();
   }
 
+  init(): void {
+    this.createScene();
+    this.doRender();
+  }
 
   createScene(): void {
     this._scene = new BABYLON.Scene(this._engine);
@@ -35,14 +41,16 @@ export default class Game {
     this.createMainLight();
     this.createMainPlayer();
     this.createMainCamera(this._player.model);
-    this.createRestPlayers();
-
-    this.createField();
-
-    this.createMoveController();
 
     this.createConnection();
 
+    // this.createRestPlayers();
+    //
+    // this.createField();
+
+    // this.createMoveController();
+    //
+    // this.createConnection();
   }
 
   // todo use as configured io and socket for whole app
