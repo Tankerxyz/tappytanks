@@ -14,6 +14,7 @@ export default class Game {
   private _scene: BABYLON.Scene;
   private _camera: BABYLON.TargetCamera;
   private _light: BABYLON.Light;
+  private _field: Field;
 
   private _moveController: MoveController;
 
@@ -36,33 +37,16 @@ export default class Game {
     this.createMainCamera(this._player.model);
     this.createRestPlayers();
 
-    this._moveController = new MoveController(
-      this._scene,
-      new Field({
-        width: 18,
-        height: 18,
-        debug: true,
-        fieldWalls: [{
-          position: new BABYLON.Vector3(-2, 1, -2),
-          size: 2
-        }, {
-          position: new BABYLON.Vector3(-8, 1, 2),
-          size: 2
-        }, {
-          position: new BABYLON.Vector3(-8, 1, 8),
-          size: 2
-        }, {
-          position: new BABYLON.Vector3(6, 1, 0),
-          size: 2
-        }],
-        restPlayers: this._restPlayers,
-      }, this._scene),
-      this._player,
-      this._camera
-      );
+    this.createField();
 
+    this.createMoveController();
 
-    // todo use as configured io and socket for whole app
+    this.createConnection();
+
+  }
+
+  // todo use as configured io and socket for whole app
+  createConnection():void {
     const socket = io('ws://localhost:3000', {
       forceNew: true,
       path: '/socket.io/'
@@ -85,6 +69,28 @@ export default class Game {
     window.addEventListener('resize', () => {
       this._engine.resize();
     });
+  }
+
+  createField(): void {
+    this._field = new Field({
+      width: 18,
+      height: 18,
+      debug: true,
+      fieldWalls: [{
+        position: new BABYLON.Vector3(-2, 1, -2),
+        size: 2
+      }, {
+        position: new BABYLON.Vector3(-8, 1, 2),
+        size: 2
+      }, {
+        position: new BABYLON.Vector3(-8, 1, 8),
+        size: 2
+      }, {
+        position: new BABYLON.Vector3(6, 1, 0),
+        size: 2
+      }],
+      restPlayers: this._restPlayers,
+    }, this._scene);
   }
 
   createPlayer(position: BABYLON.Vector3): Player {
@@ -142,6 +148,15 @@ export default class Game {
       this.createPlayer(new BABYLON.Vector3(-4, 1, -6)),
       this.createPlayer(new BABYLON.Vector3(4, 1, -4)),
     ];
+  }
+
+  createMoveController(): void {
+    this._moveController = new MoveController(
+      this._scene,
+      this._field,
+      this._player,
+      this._camera
+    );
   }
 
 }
