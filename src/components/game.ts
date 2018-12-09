@@ -1,7 +1,7 @@
 import * as BABYLON from 'babylonjs';
 import { AddLabelToMesh } from './gui';
 import Controls from './Controls';
-import Field from './Field';
+import Field, { FieldControllerOpts } from './Field';
 import MoveController from './MoveController';
 import Player from './Player';
 
@@ -62,11 +62,8 @@ export default class Game {
 
     socket.on('connect', () => console.log('WS: Accept a connection.'));
 
-    socket.on('A', (data: any) => {
-      console.log(data);  // { foo: 'bar' }
-      setTimeout(() => {
-        socket.emit('B', { foo: 'baz' });
-      }, 1000);
+    socket.on('field', (field: FieldControllerOpts) => {
+      this.createField(field);
     });
   }
 
@@ -79,26 +76,8 @@ export default class Game {
     });
   }
 
-  createField(): void {
-    this._field = new Field({
-      width: 18,
-      height: 18,
-      debug: true,
-      fieldWalls: [{
-        position: new BABYLON.Vector3(-2, 1, -2),
-        size: 2
-      }, {
-        position: new BABYLON.Vector3(-8, 1, 2),
-        size: 2
-      }, {
-        position: new BABYLON.Vector3(-8, 1, 8),
-        size: 2
-      }, {
-        position: new BABYLON.Vector3(6, 1, 0),
-        size: 2
-      }],
-      restPlayers: this._restPlayers,
-    }, this._scene);
+  createField(options: FieldControllerOpts): void {
+    this._field = new Field(options, this._scene);
   }
 
   createPlayer(position: BABYLON.Vector3): Player {

@@ -1,7 +1,7 @@
 import * as BABYLON from 'babylonjs';
 import Player from './Player';
 
-interface FieldControllerOpts {
+export interface FieldControllerOpts {
   width: number;
   height: number;
   debug?: boolean;
