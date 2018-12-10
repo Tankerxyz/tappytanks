@@ -66,12 +66,17 @@ export default class Controls {
         const { x, y, z } = movableObject.position;
         const { newX, newZ } = normalizeNewPositionFromRotationZ(movableObject.rotation.z);
 
+        // todo add collisionNormalizer to the server
+        const newPosition = collisionNormalizer(new BABYLON.Vector3(Math.round(x - newX), y, Math.round(z - newZ)), movableObject.position);
+
+        io.emit('change-position', newPosition);
+
         return  [{
           frame: 0,
           value: new BABYLON.Vector3(x, y, z)
         }, {
           frame: this.maxFrame,
-          value: collisionNormalizer(new BABYLON.Vector3(Math.round(x - newX), y, Math.round(z - newZ)), movableObject.position)
+          value: newPosition,
         }]
       }, movableObject), movableObject);
 
@@ -83,12 +88,16 @@ export default class Controls {
         const { x, y, z } = movableObject.position;
         const { newX, newZ } = normalizeNewPositionFromRotationZ(movableObject.rotation.z);
 
+        const newPosition = collisionNormalizer(new BABYLON.Vector3(Math.round(x + newX), y,Math.round(z + newZ)), movableObject.position);
+
+        io.emit('change-position', newPosition);
+
         return [{
           frame: 0,
           value: new BABYLON.Vector3(x, y, z)
         }, {
           frame: this.maxFrame,
-          value: collisionNormalizer(new BABYLON.Vector3(Math.round(x + newX), y,Math.round(z + newZ)), movableObject.position)
+          value: newPosition,
         }]
       }, movableObject), movableObject);
   }

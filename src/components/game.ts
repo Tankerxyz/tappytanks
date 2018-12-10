@@ -113,6 +113,12 @@ export default class Game {
 
       this.changePlayerRotation(player);
     });
+
+    socket.on('player-changed-position', (player: any) => {
+      console.log('player-changed-position', player);
+
+      this.changePlayerPosition(player);
+    });
   }
 
   doRender(): void {
@@ -209,6 +215,11 @@ export default class Game {
   changePlayerRotation(player: any): void {
     const restPlayer = this._restPlayers.filter(({ id }) => id === player.id)[0];
     restPlayer.setRotation(player.rotation);
+  }
+
+  changePlayerPosition(player: any): void {
+    const restPlayer = this._restPlayers.filter(({ id }) => id === player.id)[0];
+    restPlayer.setPosition(player.position);
   }
 
 }
