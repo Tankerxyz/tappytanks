@@ -21,6 +21,9 @@ export default class Game {
   private _player: Player;
   private _restPlayers: Array<Player> = [];
 
+  // todo think about better solution
+  private io: any;
+
   constructor(canvasElement: string) {
     this._canvas = document.querySelector(canvasElement) as HTMLCanvasElement;
     this._engine = new BABYLON.Engine(this._canvas, true);
@@ -60,6 +63,8 @@ export default class Game {
       path: '/socket.io/'
     });
 
+    this.io = socket;
+
     socket.on('connect', () => console.log('WS: Accept a connection.'));
 
     socket.on('field', (field: FieldControllerOpts) => {
@@ -78,8 +83,10 @@ export default class Game {
     socket.on('create-player-success', (player: any) => {
       console.log('create-player-success: ', player);
       const { x, y, z } = player.position;
+      const { x: rx, y: ry, z: rz } = player.rotation;
       this._player.id = player.id;
       this._player.setPosition(new BABYLON.Vector3(x, y, z));
+      this._player.setRotation(new BABYLON.Vector3(rx, ry, rz));
 
       if (!this._moveController) {
         this.createMoveController();
@@ -99,6 +106,13 @@ export default class Game {
 
       this.removePlayer(playerId);
     });
+
+
+    socket.on('player-changed-rotation', (player: any) => {
+      console.log('player-changed-rotation', player);
+
+      this.changePlayerRotation(player);
+    });
   }
 
   doRender(): void {
@@ -114,9 +128,9 @@ export default class Game {
     this._field = new Field(options, this._scene);
   }
 
-  createPlayer(position: BABYLON.Vector3, id?: string): Player {
+  createPlayer(position: BABYLON.Vector3, rotation: BABYLON.Vector3, id?: string): Player {
     return new Player({
-      model: this.createCone(position),
+      model: this.createCone(position, rotation),
       id: id
     });
   }
@@ -145,7 +159,7 @@ export default class Game {
   }
 
   // todo move to global controller to handle models creation
-  createCone(position: BABYLON.Vector3): BABYLON.Mesh {
+  createCone(position: BABYLON.Vector3, rotation: BABYLON.Vector3): BABYLON.Mesh {
     const cone =  BABYLON.MeshBuilder.CreateCylinder(
       'cone', {
         diameterTop: 0,
@@ -154,13 +168,16 @@ export default class Game {
       },
       this._scene);
     cone.position = position;
-    cone.rotation.x = -Math.PI/2;
+    cone.rotation = rotation;
 
     return cone;
   }
 
   createMainPlayer(): void {
-    this._player = this.createPlayer(new BABYLON.Vector3(0, 1, 0));
+    this._player = this.createPlayer(
+      new BABYLON.Vector3(0, 1, 0),
+      new BABYLON.Vector3(-Math.PI / 2, 0, 0)
+    );
   }
 
   createMoveController(): void {
@@ -168,20 +185,30 @@ export default class Game {
       this._scene,
       this._field,
       this._player,
-      this._camera
+      this._camera,
+      this.io,
     );
   }
 
   addPlayer(player: any): void {
     const { x, y, z } = player.position;
+    const { x: rx, y: ry, z: rz } = player.rotation;
 
-    this._restPlayers.push(this.createPlayer(new BABYLON.Vector3(x, y, z), player.id));
+    this._restPlayers.push(this.createPlayer(
+      new BABYLON.Vector3(x, y, z),
+      new BABYLON.Vector3(rx, ry, rz),
+    player.id));
   }
 
   removePlayer(playerId: string): void {
     const player = this._restPlayers.filter((p) => p.id === playerId)[0];
     this._restPlayers.splice(this._restPlayers.indexOf(player), 1);
     player.model.dispose();
+  }
+
+  changePlayerRotation(player: any): void {
+    const restPlayer = this._restPlayers.filter(({ id }) => id === player.id)[0];
+    restPlayer.setRotation(player.rotation);
   }
 
 }

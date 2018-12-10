@@ -8,11 +8,11 @@ export default class MoveController {
   private _movableObject: BABYLON.Mesh;
   private _controls: Controls;
 
-  constructor(scene: BABYLON.Scene, field: Field, player: Player, camera: any) {
+  constructor(scene: BABYLON.Scene, field: Field, player: Player, camera: any, io: any) {
     this._movableObject = player.model;
     this._field = field;
 
-    this._controls = new Controls(scene, this._movableObject, camera, this.collisionNormalizer);
+    this._controls = new Controls(scene, this._movableObject, camera, this.collisionNormalizer, io);
   }
 
   collisionNormalizer = (position: BABYLON.Vector3, prevPosition: BABYLON.Vector3): BABYLON.Vector3 => {

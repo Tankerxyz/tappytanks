@@ -12,7 +12,7 @@ export default class Controls {
 
   maxFrame: number = 6;
 
-  constructor(scene: BABYLON.Scene, movableObject: BABYLON.Mesh, camera: any, collisionNormalizer: any) {
+  constructor(scene: BABYLON.Scene, movableObject: BABYLON.Mesh, camera: any, collisionNormalizer: any, io: any) {
     this._scene = scene;
 
     // rotate left
@@ -21,15 +21,18 @@ export default class Controls {
       'rotation',
       () => {
         const { x, y, z } = movableObject.rotation;
+        const newRotation = new BABYLON.Vector3(x, y, z - Math.PI/2);
 
         camera.rotationOffset -= 90;
+
+        io.emit('change-rotation', newRotation);
 
         return  [{
           frame: 0,
           value: new BABYLON.Vector3(x, y, z)
         }, {
           frame: this.maxFrame,
-          value: new BABYLON.Vector3(x, y, z - Math.PI/2)
+          value: newRotation,
         }]
       }, movableObject), movableObject);
 
@@ -40,15 +43,17 @@ export default class Controls {
       'rotation',
       () => {
         const { x, y, z } = movableObject.rotation;
-
+        const newRotation = new BABYLON.Vector3(x, y, z + Math.PI/2);
         camera.rotationOffset += 90;
+
+        io.emit('change-rotation', newRotation);
 
         return  [{
           frame: 0,
           value: new BABYLON.Vector3(x, y, z)
         }, {
           frame: this.maxFrame,
-          value: new BABYLON.Vector3(x, y, z + Math.PI/2)
+          value: newRotation,
         }]
       }, movableObject), movableObject);
 

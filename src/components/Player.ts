@@ -23,4 +23,8 @@ export default class Player {
   public setPosition(position: BABYLON.Vector3): void {
     this._model.position = position;
   }
+
+  public setRotation(rotation: BABYLON.Vector3): void {
+    this._model.rotation = rotation;
+  }
 }
