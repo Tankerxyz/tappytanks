@@ -49,7 +49,29 @@ export default class Player {
   }
 
   public setPosition(position: BABYLON.Vector3): void {
-    this._model.position = position;
+    if (this.positionAnimation) {
+
+      this.positionAnimation.setKeys([
+        {
+          frame: 0,
+          value: this._model.position,
+        },
+        {
+          frame: maxFrame,
+          value: position,
+        }
+      ]);
+
+      this._scene.beginDirectAnimation(this._model,
+        [this.positionAnimation],
+        0,
+        maxFrame,
+        false,
+        1);
+      }
+    else {
+      this._model.position = position;
+    }
   }
 
   public setRotation(rotation: BABYLON.Vector3): void {
