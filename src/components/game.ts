@@ -1,11 +1,10 @@
 import * as BABYLON from 'babylonjs';
-import { AddLabelToMesh } from './gui';
-import Controls from './Controls';
 import Field, { FieldControllerOpts } from './Field';
 import MoveController from './MoveController';
 import Player from './Player';
 
 import io from 'socket.io-client';
+import PlayersController from './PlayersController';
 
 export default class Game {
 
@@ -16,10 +15,9 @@ export default class Game {
   private _light: BABYLON.Light;
   private _field: Field;
 
+  private _mainPlayer: Player;
   private _moveController: MoveController;
-
-  private _player: Player;
-  private _restPlayers: Array<Player> = [];
+  private players: PlayersController;
 
   // todo think about better solution
   private io: any;
@@ -43,17 +41,11 @@ export default class Game {
 
     this.createMainLight();
     this.createMainPlayer();
-    this.createMainCamera(this._player.model);
+    this.createMainCamera(this._mainPlayer.model);
+    this.players = new PlayersController([], this._scene);
 
     this.createConnection();
 
-    // this.createRestPlayers();
-    //
-    // this.createField();
-
-    // this.createMoveController();
-    //
-    // this.createConnection();
   }
 
   // todo use as configured io and socket for whole app
@@ -72,21 +64,19 @@ export default class Game {
         width: field.width,
         height: field.height,
         debug: field.debug,
-        restPlayers: this._restPlayers
+        restPlayers: this.players.getPlayers()
       });
 
       if (field.restPlayers) {
-        field.restPlayers.forEach(this.addPlayer.bind(this));
+        field.restPlayers.forEach((p) => this.players.addPlayer(p));
       }
     });
 
     socket.on('create-player-success', (player: any) => {
       console.log('create-player-success: ', player);
-      const { x, y, z } = player.position;
-      const { x: rx, y: ry, z: rz } = player.rotation;
-      this._player.id = player.id;
-      this._player.setPosition(new BABYLON.Vector3(x, y, z));
-      this._player.setRotation(new BABYLON.Vector3(rx, ry, rz));
+      this._mainPlayer.id = player.id;
+      this._mainPlayer.setPosition(player.position);
+      this._mainPlayer.setRotation(player.rotation);
 
       if (!this._moveController) {
         this.createMoveController();
@@ -97,27 +87,27 @@ export default class Game {
     socket.on('player-joined', (player: any) => {
       console.log('player-joined: ', player);
 
-      this.addPlayer(player);
+      this.players.addPlayer(player);
 
     });
 
     socket.on('player-leaved', (playerId: string) => {
       console.log('player-leaved: ', playerId);
 
-      this.removePlayer(playerId);
+      this.players.removePlayer(playerId);
     });
 
 
     socket.on('player-changed-rotation', (player: any) => {
       console.log('player-changed-rotation', player);
 
-      this.changePlayerRotation(player);
+      this.players.changePlayerRotation(player);
     });
 
     socket.on('player-changed-position', (player: any) => {
       console.log('player-changed-position', player);
 
-      this.changePlayerPosition(player);
+      this.players.changePlayerPosition(player);
     });
   }
 
@@ -132,13 +122,6 @@ export default class Game {
 
   createField(options: FieldControllerOpts): void {
     this._field = new Field(options, this._scene);
-  }
-
-  createPlayer(position: BABYLON.Vector3, rotation: BABYLON.Vector3, id?: string): Player {
-    return new Player({
-      model: this.createCone(position, rotation),
-      id: id
-    });
   }
 
   createMainCamera(lockedTarget: BABYLON.Mesh): void {
@@ -164,62 +147,22 @@ export default class Game {
     );
   }
 
-  // todo move to global controller to handle models creation
-  createCone(position: BABYLON.Vector3, rotation: BABYLON.Vector3): BABYLON.Mesh {
-    const cone =  BABYLON.MeshBuilder.CreateCylinder(
-      'cone', {
-        diameterTop: 0,
-        height: 1,
-        tessellation: 96
-      },
-      this._scene);
-    cone.position = position;
-    cone.rotation = rotation;
-
-    return cone;
-  }
-
   createMainPlayer(): void {
-    this._player = this.createPlayer(
-      new BABYLON.Vector3(0, 1, 0),
-      new BABYLON.Vector3(-Math.PI / 2, 0, 0)
-    );
+    this._mainPlayer = new Player({
+      position: new BABYLON.Vector3(0, 1, 0),
+      rotation: new BABYLON.Vector3(-Math.PI / 2, 0, 0),
+      id: 'temp-id',
+    }, this._scene);
   }
 
   createMoveController(): void {
     this._moveController = new MoveController(
       this._scene,
       this._field,
-      this._player,
+      this._mainPlayer,
       this._camera,
       this.io,
     );
-  }
-
-  addPlayer(player: any): void {
-    const { x, y, z } = player.position;
-    const { x: rx, y: ry, z: rz } = player.rotation;
-
-    this._restPlayers.push(this.createPlayer(
-      new BABYLON.Vector3(x, y, z),
-      new BABYLON.Vector3(rx, ry, rz),
-    player.id));
-  }
-
-  removePlayer(playerId: string): void {
-    const player = this._restPlayers.filter((p) => p.id === playerId)[0];
-    this._restPlayers.splice(this._restPlayers.indexOf(player), 1);
-    player.model.dispose();
-  }
-
-  changePlayerRotation(player: any): void {
-    const restPlayer = this._restPlayers.filter(({ id }) => id === player.id)[0];
-    restPlayer.setRotation(player.rotation);
-  }
-
-  changePlayerPosition(player: any): void {
-    const restPlayer = this._restPlayers.filter(({ id }) => id === player.id)[0];
-    restPlayer.setPosition(player.position);
   }
 
 }
