@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import PlayerAnimationCtrl from './PlayerAnimationCtrl';
 
 interface PlayerOptions {
   position: BABYLON.Vector3,
@@ -18,8 +19,7 @@ export default class Player {
   get model() { return this._model; }
 
   private _scene: BABYLON.Scene;
-  private rotationAnimation: BABYLON.Animation;
-  private positionAnimation: BABYLON.Animation;
+  private animationCtrl: PlayerAnimationCtrl;
 
   constructor(options: PlayerOptions, scene: BABYLON.Scene) {
     this._id = options.id;
@@ -27,8 +27,7 @@ export default class Player {
     this.createModel(options.position, options.rotation);
 
     if (options.animatable) {
-      this.rotationAnimation = new BABYLON.Animation(`rotation-anim-player-${this.id}`, 'rotation', 60, BABYLON.Animation.ANIMATIONTYPE_VECTOR3)
-      this.positionAnimation = new BABYLON.Animation(`position-anim-player-${this.id}`, 'position', 60, BABYLON.Animation.ANIMATIONTYPE_VECTOR3)
+      this.animationCtrl = new PlayerAnimationCtrl(maxFrame, this._model, scene, this.id);
     }
   }
 
@@ -49,53 +48,17 @@ export default class Player {
   }
 
   public setPosition(position: BABYLON.Vector3): void {
-    if (this.positionAnimation) {
-
-      this.positionAnimation.setKeys([
-        {
-          frame: 0,
-          value: this._model.position,
-        },
-        {
-          frame: maxFrame,
-          value: position,
-        }
-      ]);
-
-      this._scene.beginDirectAnimation(this._model,
-        [this.positionAnimation],
-        0,
-        maxFrame,
-        false,
-        1);
-      }
-    else {
+    if (this.animationCtrl) {
+      this.animationCtrl.startPositionAnimation(position);
+    } else {
       this._model.position = position;
     }
   }
 
   public setRotation(rotation: BABYLON.Vector3): void {
-    if (this.rotationAnimation) {
-
-      this.rotationAnimation.setKeys([
-        {
-          frame: 0,
-          value: this._model.rotation,
-        },
-        {
-          frame: maxFrame,
-          value: rotation,
-        }
-      ]);
-
-      this._scene.beginDirectAnimation(this._model,
-        [this.rotationAnimation],
-        0,
-        maxFrame,
-        false,
-        1);
-      }
-    else {
+    if (this.animationCtrl) {
+      this.animationCtrl.startRotationAnimation(rotation);
+    } else {
       this._model.rotation = rotation;
     }
   }
