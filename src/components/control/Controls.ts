@@ -1,8 +1,8 @@
 import * as BABYLON from 'babylonjs';
 import keycode from 'keycode';
-import AnimatableAction from './AnimatableAction';
+import AnimatableAction from '../action/AnimatableAction';
 
-import { normalizeNewPositionFromRotationZ } from '../utils';
+import { normalizeNewPositionFromRotationZ } from '../../utils/index';
 
 export default class Controls {
   _scene: BABYLON.Scene;

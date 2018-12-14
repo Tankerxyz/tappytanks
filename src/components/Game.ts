@@ -1,10 +1,10 @@
 import * as BABYLON from 'babylonjs';
-import Field, { FieldControllerOpts } from './Field';
-import MoveController from './MoveController';
-import Player from './Player';
+import Field, { FieldControllerOpts } from './core/Field';
+import MoveController from './control/MoveController';
+import Player from './player/Player';
 
 import io from 'socket.io-client';
-import PlayersController from './PlayersController';
+import PlayersController from './player/PlayersController';
 
 export default class Game {
 

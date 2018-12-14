@@ -1,5 +1,5 @@
 import BABYLON, { Vector3 } from 'babylonjs';
-import Player from './Player';
+import Player from './';
 
 export default class PlayersController {
   private players: Array<Player> = [];

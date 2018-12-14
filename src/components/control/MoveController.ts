@@ -1,7 +1,7 @@
-import Field from './Field';
+import Field from '../core/Field';
 import Controls from './Controls';
 import * as BABYLON from "babylonjs";
-import Player from './Player';
+import Player from '../player/Player';
 
 export default class MoveController {
   private _field: Field;
