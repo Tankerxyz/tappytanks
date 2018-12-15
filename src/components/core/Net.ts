@@ -23,44 +23,47 @@ export default class Net {
     this.socket = socket;
     this.playersCtrl = options.playersCtrl;
 
-    socket.on('connect', () => console.log('WS: Accept a connection.'));
-
     socket.on('field', options.events.onField);
-
     socket.on('create-player-success', options.events.onCreatePlayerSuccess);
 
-    socket.on('player-joined', (player: any) => {
+    this.initEventsHandling();
+  }
+
+  private initEventsHandling(): void {
+    this.socket.on('connect', () => console.log('WS: Accept a connection.'));
+
+    this.socket.on('player-joined', (player: any) => {
       console.log('player-joined: ', player);
 
       this.playersCtrl.addPlayer(player);
 
     });
 
-    socket.on('player-leaved', (playerId: string) => {
+    this.socket.on('player-leaved', (playerId: string) => {
       console.log('player-leaved: ', playerId);
 
       this.playersCtrl.removePlayer(playerId);
     });
 
 
-    socket.on('player-changed-rotation', (player: any) => {
+    this.socket.on('player-changed-rotation', (player: any) => {
       console.log('player-changed-rotation', player);
 
       this.playersCtrl.changePlayerRotation(player);
     });
 
-    socket.on('player-changed-position', (player: any) => {
+    this.socket.on('player-changed-position', (player: any) => {
       console.log('player-changed-position', player);
 
       this.playersCtrl.changePlayerPosition(player);
     });
   }
 
-  public changeRotation(newRotation: BABYLON.Vector3) {
+  public changeRotation(newRotation: BABYLON.Vector3): void {
     this.socket.emit('change-rotation', newRotation);
   }
 
-  public changePosition(newPosition: BABYLON.Vector3) {
+  public changePosition(newPosition: BABYLON.Vector3): void {
     this.socket.emit('change-position', newPosition);
   }
 };
