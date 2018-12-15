@@ -3,7 +3,6 @@ import Field, { FieldControllerOpts } from './core/Field';
 import MoveController from './control/MoveController';
 import Player from './player/Player';
 
-import io from 'socket.io-client';
 import PlayersController from './player/PlayersController';
 import Net from './core/Net';
 
@@ -20,9 +19,6 @@ export default class Game {
   private _moveController: MoveController;
   private playersCtrl: PlayersController;
   private net: Net;
-
-  // todo think about better solution
-  private io: any;
 
   constructor(canvasElement: string) {
     this._canvas = document.querySelector(canvasElement) as HTMLCanvasElement;
