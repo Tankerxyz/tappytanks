@@ -5,6 +5,7 @@ import Player from './player/Player';
 
 import io from 'socket.io-client';
 import PlayersController from './player/PlayersController';
+import Net from './core/Net';
 
 export default class Game {
 
@@ -17,7 +18,8 @@ export default class Game {
 
   private _mainPlayer: Player;
   private _moveController: MoveController;
-  private players: PlayersController;
+  private playersCtrl: PlayersController;
+  private net: Net;
 
   // todo think about better solution
   private io: any;
@@ -42,72 +44,21 @@ export default class Game {
     this.createMainLight();
     this.createMainPlayer();
     this.createMainCamera(this._mainPlayer.model);
-    this.players = new PlayersController([], this._scene);
+    this.playersCtrl = new PlayersController([], this._scene);
 
     this.createConnection();
 
   }
 
   // todo use as configured io and socket for whole app
-  createConnection():void {
-    const socket = io('ws://localhost:3000', {
-      forceNew: true,
-      path: '/socket.io/'
-    });
-
-    this.io = socket;
-
-    socket.on('connect', () => console.log('WS: Accept a connection.'));
-
-    socket.on('field', (field: FieldControllerOpts) => {
-      this.createField({
-        width: field.width,
-        height: field.height,
-        debug: field.debug,
-        restPlayers: this.players.getPlayers()
-      });
-
-      if (field.restPlayers) {
-        field.restPlayers.forEach((p) => this.players.addPlayer(p));
+  createConnection(): void {
+    this.net = new Net({
+      url: 'ws://localhost:3000',
+      playersCtrl: this.playersCtrl,
+      events: {
+        onField: this.onField,
+        onCreatePlayerSuccess: this.onCreatePlayerSuccess
       }
-    });
-
-    socket.on('create-player-success', (player: any) => {
-      console.log('create-player-success: ', player);
-      this._mainPlayer.id = player.id;
-      this._mainPlayer.setPosition(player.position);
-      this._mainPlayer.setRotation(player.rotation);
-
-      if (!this._moveController) {
-        this.createMoveController();
-      }
-
-    });
-
-    socket.on('player-joined', (player: any) => {
-      console.log('player-joined: ', player);
-
-      this.players.addPlayer(player);
-
-    });
-
-    socket.on('player-leaved', (playerId: string) => {
-      console.log('player-leaved: ', playerId);
-
-      this.players.removePlayer(playerId);
-    });
-
-
-    socket.on('player-changed-rotation', (player: any) => {
-      console.log('player-changed-rotation', player);
-
-      this.players.changePlayerRotation(player);
-    });
-
-    socket.on('player-changed-position', (player: any) => {
-      console.log('player-changed-position', player);
-
-      this.players.changePlayerPosition(player);
     });
   }
 
@@ -119,6 +70,30 @@ export default class Game {
       this._engine.resize();
     });
   }
+
+  onField = (field: FieldControllerOpts) => {
+    this.createField({
+      width: field.width,
+      height: field.height,
+      debug: field.debug,
+      restPlayers: this.playersCtrl.getPlayers()
+    });
+
+    if (field.restPlayers) {
+      field.restPlayers.forEach((p) => this.playersCtrl.addPlayer(p));
+    }
+  }
+
+  onCreatePlayerSuccess = (player: any) => {
+    console.log('create-player-success: ', player);
+    this._mainPlayer.id = player.id;
+    this._mainPlayer.setPosition(player.position);
+    this._mainPlayer.setRotation(player.rotation);
+
+    if (!this._moveController) {
+      this.createMoveController();
+    }
+  };
 
   createField(options: FieldControllerOpts): void {
     this._field = new Field(options, this._scene);
@@ -161,7 +136,7 @@ export default class Game {
       this._field,
       this._mainPlayer,
       this._camera,
-      this.io,
+      this.net,
     );
   }
 

@@ -2,7 +2,8 @@ import * as BABYLON from 'babylonjs';
 import keycode from 'keycode';
 import AnimatableAction from '../action/AnimatableAction';
 
-import { normalizeNewPositionFromRotationZ } from '../../utils/index';
+import { normalizeNewPositionFromRotationZ } from '../../utils';
+import Net from '../core/Net';
 
 export default class Controls {
   _scene: BABYLON.Scene;
@@ -12,7 +13,7 @@ export default class Controls {
 
   maxFrame: number = 6;
 
-  constructor(scene: BABYLON.Scene, movableObject: BABYLON.Mesh, camera: any, collisionNormalizer: any, io: any) {
+  constructor(scene: BABYLON.Scene, movableObject: BABYLON.Mesh, camera: any, collisionNormalizer: any, net: Net) {
     this._scene = scene;
 
     // rotate left
@@ -25,7 +26,7 @@ export default class Controls {
 
         camera.rotationOffset -= 90;
 
-        io.emit('change-rotation', newRotation);
+        net.changeRotation(newRotation);
 
         return  [{
           frame: 0,
@@ -46,7 +47,7 @@ export default class Controls {
         const newRotation = new BABYLON.Vector3(x, y, z + Math.PI/2);
         camera.rotationOffset += 90;
 
-        io.emit('change-rotation', newRotation);
+        net.changeRotation(newRotation);
 
         return  [{
           frame: 0,
@@ -69,7 +70,7 @@ export default class Controls {
         // todo add collisionNormalizer to the server
         const newPosition = collisionNormalizer(new BABYLON.Vector3(Math.round(x - newX), y, Math.round(z - newZ)), movableObject.position);
 
-        io.emit('change-position', newPosition);
+        net.changePosition(newPosition);
 
         return  [{
           frame: 0,
@@ -90,7 +91,7 @@ export default class Controls {
 
         const newPosition = collisionNormalizer(new BABYLON.Vector3(Math.round(x + newX), y,Math.round(z + newZ)), movableObject.position);
 
-        io.emit('change-position', newPosition);
+        net.changePosition(newPosition);
 
         return [{
           frame: 0,

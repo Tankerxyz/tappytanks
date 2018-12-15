@@ -2,17 +2,18 @@ import Field from '../core/Field';
 import Controls from './Controls';
 import * as BABYLON from "babylonjs";
 import Player from '../player/Player';
+import Net from '../core/Net';
 
 export default class MoveController {
   private _field: Field;
   private _movableObject: BABYLON.Mesh;
   private _controls: Controls;
 
-  constructor(scene: BABYLON.Scene, field: Field, player: Player, camera: any, io: any) {
+  constructor(scene: BABYLON.Scene, field: Field, player: Player, camera: any, net: Net) {
     this._movableObject = player.model;
     this._field = field;
 
-    this._controls = new Controls(scene, this._movableObject, camera, this.collisionNormalizer, io);
+    this._controls = new Controls(scene, this._movableObject, camera, this.collisionNormalizer, net);
   }
 
   collisionNormalizer = (position: BABYLON.Vector3, prevPosition: BABYLON.Vector3): BABYLON.Vector3 => {
