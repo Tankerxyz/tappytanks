@@ -33,4 +33,8 @@ export default class PlayersController {
     const playerToChange = this.players.filter(({ id }) => id === player.id)[0];
     playerToChange.setPosition(player.position);
   }
+
+  public removeAll(): void {
+    this.players.forEach((p) => this.removePlayer(p));
+  }
 }

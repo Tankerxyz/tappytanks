@@ -68,6 +68,7 @@ export default class Game {
   }
 
   onField = (field: FieldControllerOpts) => {
+    this.playersCtrl.removeAll();
     this.createField({
       width: field.width,
       height: field.height,
@@ -78,7 +79,7 @@ export default class Game {
     if (field.restPlayers) {
       field.restPlayers.forEach((p) => this.playersCtrl.addPlayer(p));
     }
-  }
+  };
 
   onCreatePlayerSuccess = (player: any) => {
     console.log('create-player-success: ', player);
