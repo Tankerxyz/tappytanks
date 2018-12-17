@@ -19,4 +19,28 @@ body {
   #inspector-host {
     display: none;
   }
+
+  #controls {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 25%;
+    width: calc((60px * 3) + 20px);
+    justify-content: space-between;
+    align-items: flex-end;
+
+    .key {
+      width: 60px;
+      height: 60px;
+      border: 2px solid whitesmoke;
+      background: aliceblue;
+    }
+
+    .keys {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: calc(60px * 2 + 10px);
+    }
+  }
 }
