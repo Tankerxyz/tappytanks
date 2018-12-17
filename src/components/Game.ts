@@ -49,7 +49,7 @@ export default class Game {
   // todo use as configured io and socket for whole app
   createConnection(): void {
     this.net = new Net({
-      url: 'ws://localhost:3000',
+      url: `ws://${window.location.hostname}:3000`,
       playersCtrl: this.playersCtrl,
       events: {
         onField: this.onField,

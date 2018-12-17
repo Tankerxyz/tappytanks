@@ -9,6 +9,7 @@ module.exports = WebpackMerge(common, {
 		open: false,
 		https: false,
 		hot: true,
+    host: '0.0.0.0',
 		port: 3030,
 		compress: false,
 		headers: {},

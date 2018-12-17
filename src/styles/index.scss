@@ -13,3 +13,10 @@ body {
     height: 100%;
     touch-action: none;
 }
+
+@media(max-width: 768px) {
+  #scene-explorer-host,
+  #inspector-host {
+    display: none;
+  }
+}
