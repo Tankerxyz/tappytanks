@@ -73,11 +73,11 @@ export default class Game {
       width: field.width,
       height: field.height,
       debug: field.debug,
-      restPlayers: this.playersCtrl.getPlayers()
+      players: this.playersCtrl.getPlayers()
     });
 
-    if (field.restPlayers) {
-      field.restPlayers.forEach((p) => this.playersCtrl.addPlayer(p));
+    if (field.players) {
+      field.players.forEach((p) => this.playersCtrl.addPlayer(p));
     }
   };
 

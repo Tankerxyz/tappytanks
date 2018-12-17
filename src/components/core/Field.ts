@@ -6,7 +6,7 @@ export interface FieldControllerOpts {
   height: number;
   debug?: boolean;
   fieldWalls?: Array<FieldWall>;
-  restPlayers?: Array<Player>;
+  players?: Array<Player>;
 }
 
 interface FieldWall {
@@ -23,7 +23,7 @@ export default class Field {
   private readonly _scene: BABYLON.Scene;
   private _model: BABYLON.Mesh;
   private _walls: Array<BABYLON.Mesh> = [];
-  private _restPlayers: Array<Player> = [];
+  private _players: Array<Player> = [];
 
   constructor(options: FieldControllerOpts, scene: BABYLON.Scene) {
     this._width = options.width;
@@ -40,8 +40,8 @@ export default class Field {
       this.generateFieldWalls(options.fieldWalls);
     }
 
-    if (options.restPlayers) {
-      this._restPlayers = options.restPlayers;
+    if (options.players) {
+      this._players = options.players;
     }
   }
 
@@ -109,7 +109,7 @@ export default class Field {
   }
 
   public getPlayerModelByPosition(position: BABYLON.Vector3): Array<Player> {
-    return this._restPlayers.filter((player) => {
+    return this._players.filter((player) => {
       const model = player.model;
       if (position.x === model.position.x && position.z === model.position.z) {
         return model;
