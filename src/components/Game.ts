@@ -87,9 +87,9 @@ export default class Game {
     this._mainPlayer.setPosition(player.position);
     this._mainPlayer.setRotation(player.rotation);
 
-    if (!this._moveController) {
-      this.createMoveController();
-    }
+    this._camera.dispose();
+    this.createMainCamera(this._mainPlayer.model);
+    this.createMoveController();
   };
 
   createField(options: FieldControllerOpts): void {
