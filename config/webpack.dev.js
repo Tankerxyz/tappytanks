@@ -8,7 +8,7 @@ module.exports = WebpackMerge(common, {
 	devServer: {
 		open: false,
 		https: false,
-		hot: true,
+		hot: false,
     host: '0.0.0.0',
 		port: 3030,
 		compress: false,
