@@ -8,6 +8,8 @@ import Net from '../core/Net';
 export default class Controls {
   _scene: BABYLON.Scene;
   actions: Array<AnimatableAction> = [];
+  animations: Array<BABYLON.Animation> = [];
+  movableObject: BABYLON.Mesh;
 
   actionStarted: boolean = false;
 
@@ -15,6 +17,7 @@ export default class Controls {
 
   constructor(scene: BABYLON.Scene, movableObject: BABYLON.Mesh, camera: any, collisionNormalizer: any, net: Net) {
     this._scene = scene;
+    this.movableObject = movableObject;
 
     // rotate left
     this.addAnimatableAction(this.createAnimatableAction(keycode.codes.left,
@@ -150,7 +153,18 @@ export default class Controls {
 
   attachAnimation(movableObject: BABYLON.Mesh) {
     return (animation: BABYLON.Animation) => {
+      this.animations.push(animation);
       movableObject.animations.push(animation);
     };
+  }
+
+  public dispose(): void {
+    this.actions.forEach(a => this._scene.actionManager.unregisterAction(a.action));
+    delete this.actions;
+    // returns only not attached animations from this class
+    this.movableObject.animations = this.movableObject.animations.filter(a => this.animations.indexOf(a) === -1);
+
+    // @ts-ignore
+    delete this.animations;
   }
 }

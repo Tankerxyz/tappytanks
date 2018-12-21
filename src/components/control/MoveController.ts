@@ -45,4 +45,8 @@ export default class MoveController {
 
     return position;
   }
+
+  public dispose(): void {
+    this._controls.dispose();
+  }
 }

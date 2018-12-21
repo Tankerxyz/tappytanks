@@ -128,6 +128,13 @@ export default class Game {
   }
 
   createMoveController(): void {
+    if (this._moveController) {
+      console.log('foundMoveController');
+      this._moveController.dispose();
+      // @ts-ignore
+      this._moveController = null;delete this._moveController;
+    }
+
     this._moveController = new MoveController(
       this._scene,
       this._field,
