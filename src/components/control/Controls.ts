@@ -24,7 +24,7 @@ export default class Controls {
         const { x, y, z } = movableObject.rotation;
         const newRotation = new BABYLON.Vector3(x, y, z - Math.PI/2);
 
-        camera.rotationOffset -= 90;
+        camera.rotationOffset = (newRotation.z)*180/Math.PI;
 
         net.changeRotation(newRotation);
 
@@ -45,7 +45,8 @@ export default class Controls {
       () => {
         const { x, y, z } = movableObject.rotation;
         const newRotation = new BABYLON.Vector3(x, y, z + Math.PI/2);
-        camera.rotationOffset += 90;
+
+        camera.rotationOffset = (newRotation.z)*180/Math.PI;
 
         net.changeRotation(newRotation);
 
