@@ -11,7 +11,7 @@ export default class Game {
   private _canvas: HTMLCanvasElement;
   private _engine: BABYLON.Engine;
   private _scene: BABYLON.Scene;
-  private _camera: BABYLON.TargetCamera;
+  private _camera: BABYLON.FollowCamera;
   private _light: BABYLON.Light;
   private _field: Field;
 
@@ -99,15 +99,21 @@ export default class Game {
   createMainCamera(lockedTarget: BABYLON.Mesh): void {
     this._camera = new BABYLON.FollowCamera(
       'freeCamera-1',
-      new BABYLON.Vector3(0, 6, 8),
+      new BABYLON.Vector3(
+        lockedTarget.position.x,
+        lockedTarget.position.y + 2,
+        lockedTarget.position.z),
       this._scene,
       lockedTarget
     );
 
-    (this._camera as any).cameraAcceleration = 0.04;
-    (this._camera as any).radius = 6;
-    (this._camera as any).heightOffset = 3;
+    this._camera.rotationOffset = lockedTarget.rotation.z*180/Math.PI;
+    this._camera.cameraAcceleration = 0.04;
+    this._camera.radius = 6;
+    this._camera.heightOffset = 3;
 
+
+    // todo for testing
     (window as any).camera = this._camera;
   }
 
