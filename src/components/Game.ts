@@ -112,7 +112,6 @@ export default class Game {
     this._camera.radius = 6;
     this._camera.heightOffset = 3;
 
-
     // todo for testing
     (window as any).camera = this._camera;
   }
@@ -129,6 +128,7 @@ export default class Game {
     this._mainPlayer = new Player({
       position: new BABYLON.Vector3(0, 1, 0),
       rotation: new BABYLON.Vector3(-Math.PI / 2, 0, 0),
+      stat: { hp: 100, maxHp: 100},
       id: 'temp-id',
     }, this._scene);
   }

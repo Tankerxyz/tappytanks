@@ -1,9 +1,15 @@
 import * as BABYLON from 'babylonjs';
 import PlayerAnimationCtrl from './PlayerAnimationCtrl';
 
+interface Statistic {
+  hp: number;
+  maxHp: number;
+}
+
 interface PlayerOptions {
   position: BABYLON.Vector3,
   rotation: BABYLON.Vector3,
+  stat: Statistic,
   id: string;
   animatable?: boolean
 }
@@ -18,6 +24,8 @@ export default class Player {
   private _model: BABYLON.Mesh;
   get model() { return this._model; }
 
+  private stat: Statistic;
+
   private _scene: BABYLON.Scene;
   private animationCtrl: PlayerAnimationCtrl;
 
@@ -25,6 +33,7 @@ export default class Player {
     this._id = options.id;
     this._scene = scene;
     this.createModel(options.position, options.rotation);
+    this.stat = options.stat
 
     if (options.animatable) {
       this.animationCtrl = new PlayerAnimationCtrl(maxFrame, this._model, scene, this.id);
