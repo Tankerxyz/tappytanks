@@ -22,6 +22,6 @@ module.exports = WebpackMerge(common, {
 		after(app) {}, /* eslint-disable-line */
 	},
 	plugins: [
-		new Webpack.HotModuleReplacementPlugin()
+		// new Webpack.HotModuleReplacementPlugin()
 	]
 });
