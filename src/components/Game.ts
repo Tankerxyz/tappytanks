@@ -86,6 +86,7 @@ export default class Game {
     this._mainPlayer.id = player.id;
     this._mainPlayer.setPosition(player.position);
     this._mainPlayer.setRotation(player.rotation);
+    // todo set stat
 
     this._camera.dispose();
     this.createMainCamera(this._mainPlayer.model);

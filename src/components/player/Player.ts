@@ -46,9 +46,10 @@ export default class Player {
       var advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
       var rect1: any = new GUI.Rectangle();
-      rect1.width = 0.3;
       rect1.adaptWidthToChildren = true;
-      rect1.height = "40px";
+      rect1.adaptHeightToChildren = true;
+      rect1.width = 0.4;
+      rect1.height = "60px";
       rect1.cornerRadius = 20;
       rect1.color = "Orange";
       rect1.thickness = 4;
@@ -57,7 +58,9 @@ export default class Player {
       advancedTexture.addControl(rect1);
 
       var label = new GUI.TextBlock();
-      label.text = `Player: (${this._id})`;
+
+      label.text = `Player: (${this._id})
+      hp: ${this.stat.hp}/${this.stat.maxHp}`;
       rect1.addControl(label);
 
       rect1.linkWithMesh(this._model);
