@@ -15,7 +15,7 @@ export default class PlayersController {
   }
 
   public addPlayer(player: any): void {
-    this.players.push(new Player({...player, animatable: true}, this._scene));
+    this.players.push(new Player({...player, animatable: true, withGui: true}, this._scene));
   }
 
   public removePlayer(player: any): void {
