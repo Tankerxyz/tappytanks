@@ -1,6 +1,6 @@
 import * as BABYLON from 'babylonjs';
-import * as GUI from 'babylonjs-gui';
 import PlayerAnimationCtrl from './PlayerAnimationCtrl';
+import PlayerGUI from './PlayerGUI';
 
 interface Statistic {
   hp: number;
@@ -28,6 +28,7 @@ export default class Player {
 
   private stat: Statistic;
 
+  private gui: PlayerGUI;
   private _scene: BABYLON.Scene;
   private animationCtrl: PlayerAnimationCtrl;
 
@@ -43,28 +44,9 @@ export default class Player {
 
     // temp
     if (options.withGui) {
-      var advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-
-      var rect1: any = new GUI.Rectangle();
-      rect1.adaptWidthToChildren = true;
-      rect1.adaptHeightToChildren = true;
-      rect1.width = 0.4;
-      rect1.height = "60px";
-      rect1.cornerRadius = 20;
-      rect1.color = "Orange";
-      rect1.thickness = 4;
-      rect1.background = "green";
-
-      advancedTexture.addControl(rect1);
-
-      var label = new GUI.TextBlock();
-
-      label.text = `Player: (${this._id})
+      const text = `Player: (${this._id})
       hp: ${this.stat.hp}/${this.stat.maxHp}`;
-      rect1.addControl(label);
-
-      rect1.linkWithMesh(this._model);
-      rect1.linkOffsetY = -75;
+      this.gui = new PlayerGUI({ text, model: this.model });
     }
   }
 
