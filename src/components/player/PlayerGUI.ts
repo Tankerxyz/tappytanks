@@ -17,7 +17,7 @@ export default class PlayerGUI {
     this.rectWrapper = new GUI.Rectangle();
     this.rectWrapper.adaptWidthToChildren = true;
     this.rectWrapper.adaptHeightToChildren = true;
-    this.rectWrapper.width = 0.4;
+    this.rectWrapper.width = "350px";
     this.rectWrapper.height = "60px";
     this.rectWrapper.cornerRadius = 20;
     this.rectWrapper.color = "Orange";
