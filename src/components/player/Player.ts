@@ -83,4 +83,9 @@ export default class Player {
       this._model.rotation = rotation;
     }
   }
+
+  public dispose(): void {
+    this._model.dispose();
+    this.gui.dispose();
+  }
 }

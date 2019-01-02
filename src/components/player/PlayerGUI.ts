@@ -7,7 +7,7 @@ export interface PlayerGUIOpts {
 }
 
 export default class PlayerGUI {
-  private ui: any;
+  private ui: GUI.AdvancedDynamicTexture;
   private rectWrapper: GUI.Rectangle;
   private label: GUI.TextBlock;
 
@@ -33,5 +33,11 @@ export default class PlayerGUI {
 
     this.rectWrapper.linkWithMesh(options.model);
     this.rectWrapper.linkOffsetY = -75;
+  }
+
+  public dispose(): void {
+    this.ui.dispose();
+    this.rectWrapper.dispose();
+    this.label.dispose();
   }
 }

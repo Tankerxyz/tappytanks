@@ -21,7 +21,7 @@ export default class PlayersController {
   public removePlayer(player: any): void {
     const playerToRemove = this.players.filter(({ id }) => id === player.id)[0];
     this.players.splice(this.players.indexOf(playerToRemove), 1);
-    playerToRemove.model.dispose();
+    playerToRemove.dispose();
   }
 
   public changePlayerRotation(player: any): void {
