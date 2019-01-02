@@ -5,7 +5,7 @@ export interface FieldControllerOpts {
   width: number;
   height: number;
   debug?: boolean;
-  fieldWalls?: Array<FieldWall>;
+  walls?: Array<FieldWall>;
   players?: Array<Player>;
 }
 
@@ -36,8 +36,8 @@ export default class Field {
       this.createDebugLayerLines(2);
     }
 
-    if (options.fieldWalls) {
-      this.generateFieldWalls(options.fieldWalls);
+    if (options.walls) {
+      this.generateFieldWalls(options.walls);
     }
 
     if (options.players) {
