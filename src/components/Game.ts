@@ -95,6 +95,12 @@ export default class Game {
   };
 
   createField(options: FieldControllerOpts): void {
+    if (this._field) {
+      this._field.dispose();
+      // @ts-ignore
+      delete this._field;
+    }
+
     this._field = new Field(options, this._scene);
   }
 
@@ -137,7 +143,6 @@ export default class Game {
 
   createMoveController(): void {
     if (this._moveController) {
-      console.log('foundMoveController');
       this._moveController.dispose();
       // @ts-ignore
       this._moveController = null;delete this._moveController;

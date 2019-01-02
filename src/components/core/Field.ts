@@ -116,4 +116,8 @@ export default class Field {
       }
     });
   }
+
+  public dispose(): void {
+    this._walls.map((w) => w.dispose());
+  }
 }
