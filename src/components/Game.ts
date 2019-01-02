@@ -73,6 +73,7 @@ export default class Game {
       width: field.width,
       height: field.height,
       debug: field.debug,
+      walls: field.walls,
       players: this.playersCtrl.getPlayers()
     });
 
