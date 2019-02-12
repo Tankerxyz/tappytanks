@@ -95,6 +95,7 @@ export default class Game {
     this._mainPlayer.id = player.id;
     this._mainPlayer.setPosition(player.position);
     this._mainPlayer.setRotation(player.rotation);
+    this._mainPlayer.changeColor(player.color);
     // todo set stat
 
     this._camera.dispose();
@@ -144,6 +145,7 @@ export default class Game {
     this._mainPlayer = new Player({
       position: new BABYLON.Vector3(0, 1, 0),
       rotation: new BABYLON.Vector3(-Math.PI / 2, 0, 0),
+      color: '#ffffff',
       stat: { hp: 100, maxHp: 100},
       id: 'temp-id',
     }, this._scene);

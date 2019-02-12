@@ -11,6 +11,7 @@ interface PlayerOptions {
   position: BABYLON.Vector3,
   rotation: BABYLON.Vector3,
   stat: Statistic,
+  color: string;
   id: string;
   animatable?: boolean,
   withGui?: boolean,
@@ -31,6 +32,7 @@ export default class Player {
   private gui: PlayerGUI;
   private _scene: BABYLON.Scene;
   private animationCtrl: PlayerAnimationCtrl;
+  private playerMaterial: BABYLON.StandardMaterial;
 
   constructor(options: PlayerOptions, scene: BABYLON.Scene) {
     this._id = options.id;
@@ -48,6 +50,14 @@ export default class Player {
       hp: ${this.stat.hp}/${this.stat.maxHp}`;
       this.gui = new PlayerGUI({ text, model: this.model });
     }
+
+    if (options.color) {
+      this.changeColor(options.color);
+    }
+  }
+
+  public changeColor(color: string) {
+    this.playerMaterial.diffuseColor = BABYLON.Color3.FromHexString(color);
   }
 
   private createModel(
@@ -65,7 +75,10 @@ export default class Player {
       this._model.position = position;
       this._model.rotation = rotation;
 
+      this.playerMaterial = new BABYLON.StandardMaterial(`playerMaterial${this.id}`, this._scene);
+      this.playerMaterial.diffuseColor = new BABYLON.Color3(0.9, 0.9, 0.9);
 
+      this._model.material = this.playerMaterial;
   }
 
   public setPosition(position: BABYLON.Vector3): void {
