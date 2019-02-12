@@ -3,6 +3,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const DotenvPlugin = require('dotenv-webpack');
 const devMode = process.env.NODE_ENV === 'development';
 
 module.exports = {
@@ -70,25 +71,10 @@ module.exports = {
 		new MiniCssExtractPlugin({
 			filename: devMode ? '[name].css' : '[name].[hash].css',
 			chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
-		})
-		// new CopyWebpackPlugin([
-		// 	{
-		// 		from: path.resolve(__dirname, '../src/models'),
-		// 		to: 'src/models'
-		// 	},
-		// 	{
-		// 		from: path.resolve(__dirname, '../src/images/pointer'),
-		// 		to: 'src/images/pointer'
-		// 	},
-		// 	{
-		// 		from: path.resolve(__dirname, '../src/images/loading.gif'),
-		// 		to: 'src/images/loading.gif'
-		// 	},
-		// 	{
-		// 		from: path.resolve(__dirname, '../src/images/quickstart.png'),
-		// 		to: 'src/images/quickstart.png'
-		// 	},
-		// ])
+		}),
+    new DotenvPlugin({
+      path: path.resolve(__dirname, `../.env.${process.env.NODE_ENV}`),
+    })
 	],
 	optimization: {
 		namedChunks: true,

@@ -6,6 +6,9 @@ import Player from './player/Player';
 import PlayersController from './player/PlayersController';
 import Net from './core/Net';
 
+// todo
+declare var process: any;
+
 export default class Game {
 
   private _canvas: HTMLCanvasElement;
@@ -48,8 +51,13 @@ export default class Game {
 
   // todo use as configured io and socket for whole app
   createConnection(): void {
+    const url = `ws://${process.env.API_HOST}${process.env.API_PORT ? ':'+process.env.API_PORT : ''}`;
+
+    // todo for testing deployment
+    console.log(url);
+
     this.net = new Net({
-      url: `ws://${window.location.hostname}:3000`,
+      url,
       playersCtrl: this.playersCtrl,
       events: {
         onField: this.onField,

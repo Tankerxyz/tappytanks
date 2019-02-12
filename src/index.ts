@@ -1,6 +1,6 @@
 import './styles/index.scss';
 import Game from './components/Game';
-import keycode from 'keycode'
+import keycode from 'keycode';
 
 window.addEventListener('DOMContentLoaded', () => {
   const game = new Game('#renderCanvas');

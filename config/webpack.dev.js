@@ -10,7 +10,7 @@ module.exports = WebpackMerge(common, {
 		https: false,
 		hot: false,
     host: '0.0.0.0',
-		port: 3030,
+		port: process.env.PORT,
 		compress: false,
 		headers: {},
 		proxy: {
