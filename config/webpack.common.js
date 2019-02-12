@@ -11,7 +11,7 @@ module.exports = {
 		app: path.resolve(__dirname, '../src/index.ts'),
 	},
 	output: {
-		filename: '[name].js',
+		filename: '[name].[hash].js',
 		// chunkFilename: '[name].bundle.js',
 		path: path.resolve(__dirname, '../dist')
 	},
@@ -80,7 +80,7 @@ module.exports = {
 		namedChunks: true,
 		splitChunks: {
 			name: 'vendor',
-			filename: 'common.js',
+			filename: 'common.[hash].js',
 			chunks: 'all',
 			cacheGroups: {
 				commons: {
