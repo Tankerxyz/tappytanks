@@ -9,6 +9,7 @@
     "start:build": "cross-env NODE_ENV='production' DOTENV_CONFIG_PATH='./.env.production' webpack -r dotenv/config --config config/webpack.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Tankerxyz/tappytanks.git"
