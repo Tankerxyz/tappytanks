@@ -21,6 +21,7 @@ body {
   }
 
   #controls {
+    user-select: none;
     display: flex;
     position: fixed;
     bottom: 0;
