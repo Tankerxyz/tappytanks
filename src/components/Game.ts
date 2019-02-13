@@ -29,7 +29,7 @@ export default class Game {
 
   constructor(canvasElement: string) {
     this._canvas = document.querySelector(canvasElement) as HTMLCanvasElement;
-    this._engine = new BABYLON.Engine(this._canvas, false, {antialias: false}, true);
+    this._engine = new BABYLON.Engine(this._canvas, false, {antialias: false}, false);
     this.stats = new Stats();
     document.body.appendChild(this.stats.dom);
 
