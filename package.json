@@ -7,7 +7,8 @@
     "start": "cross-env NODE_ENV='development' DOTENV_CONFIG_PATH='./.env.development' webpack-dev-server -r dotenv/config --progress --config config/webpack.dev.js",
     "start:prod": "cross-env NODE_ENV='production' DOTENV_CONFIG_PATH='./.env.production' node -r dotenv/config ./server",
     "start:build": "cross-env NODE_ENV='production' DOTENV_CONFIG_PATH='./.env.production' webpack -r dotenv/config --config config/webpack.prod.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prod": "concurrently \"npm run start:prod\" \"npm run start:build\""
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
     "babylonjs-loaders": "^4.0.0-alpha.7",
     "cannon": "^0.6.2",
     "clean-webpack-plugin": "^0.1.19",
+    "concurrently": "^4.1.0",
     "copy-webpack-plugin": "^4.6.0",
     "cross-env": "^5.2.0",
     "css-loader": "^1.0.1",
