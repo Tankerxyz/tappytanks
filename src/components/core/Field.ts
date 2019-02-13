@@ -50,6 +50,10 @@ export default class Field {
       const fieldWall = BABYLON.MeshBuilder.CreateBox(`fieldWall${i}`, {
         size: wall.size
       }, this._scene);
+      const material = new BABYLON.StandardMaterial(`fialdWallMat${i}`, this._scene);
+      material.diffuseTexture = new BABYLON.Texture("https://www.babylonjs-playground.com/textures/crate.png", this._scene);
+      material.diffuseTexture.hasAlpha = true;
+      fieldWall.material = material;
       fieldWall.position = wall.position;
 
       this._walls.push(fieldWall);
