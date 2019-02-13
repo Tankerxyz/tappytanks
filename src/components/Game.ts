@@ -25,7 +25,7 @@ export default class Game {
 
   constructor(canvasElement: string) {
     this._canvas = document.querySelector(canvasElement) as HTMLCanvasElement;
-    this._engine = new BABYLON.Engine(this._canvas, true, {antialias: true}, true);
+    this._engine = new BABYLON.Engine(this._canvas, false, {antialias: false}, true);
 
     this.init();
   }
