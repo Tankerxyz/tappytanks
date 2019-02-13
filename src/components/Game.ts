@@ -19,6 +19,7 @@ export default class Game {
   private _camera: BABYLON.FollowCamera;
   private _light: BABYLON.Light;
   private _field: Field;
+  private _skybox: any;
 
   private _mainPlayer: Player;
   private _moveController: MoveController;
@@ -46,12 +47,29 @@ export default class Game {
     this._scene.debugLayer.show();
 
     this.createMainLight();
+    this.createSkybox();
     this.createMainPlayer();
     this.createMainCamera(this._mainPlayer.model);
     this.playersCtrl = new PlayersController([], this._scene);
 
     this.createConnection();
 
+  }
+
+  createSkybox(): void {
+    const skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:1000.0}, this._scene);
+    skybox.position.y = -250;
+    const skyboxMaterial = new BABYLON.StandardMaterial("skyBoxMaterial", this._scene);
+    skyboxMaterial.backFaceCulling = false;
+
+    // todo change build settings for using my files
+    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("https://www.babylonjs-playground.com/textures/skybox", this._scene);
+
+    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+    skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+    skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    skybox.material = skyboxMaterial;
+    this._skybox = skybox;
   }
 
   // todo use as configured io and socket for whole app
