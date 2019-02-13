@@ -2,6 +2,8 @@ import * as BABYLON from 'babylonjs';
 import Field, { FieldControllerOpts } from './core/Field';
 import MoveController from './control/MoveController';
 import Player from './player/Player';
+// @ts-ignore
+import Stats from 'stats.js';
 
 import PlayersController from './player/PlayersController';
 import Net from './core/Net';
@@ -22,10 +24,13 @@ export default class Game {
   private _moveController: MoveController;
   private playersCtrl: PlayersController;
   private net: Net;
+  private stats: Stats;
 
   constructor(canvasElement: string) {
     this._canvas = document.querySelector(canvasElement) as HTMLCanvasElement;
     this._engine = new BABYLON.Engine(this._canvas, false, {antialias: false}, true);
+    this.stats = new Stats();
+    document.body.appendChild(this.stats.dom);
 
     this.init();
   }
@@ -69,6 +74,7 @@ export default class Game {
   doRender(): void {
     this._engine.runRenderLoop(() => {
       this._scene.render();
+      this.stats.update();
     });
     window.addEventListener('resize', () => {
       this._engine.resize();
