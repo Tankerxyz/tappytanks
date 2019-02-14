@@ -62,8 +62,25 @@ export default class Field {
 
   private generateModel(scene: BABYLON.Scene) {
     // todo move to incapsulate component
-    const material = new BABYLON.StandardMaterial("material", scene);
-    material.diffuseColor = new BABYLON.Color3(0.08, 0.21, 0.47);
+    const scale = 3;
+    const material = new BABYLON.StandardMaterial("ground-material", scene) as any;
+    material.diffuseTexture = new BABYLON.Texture("https://i.imgur.com/5hIPReh.jpg", scene);
+    material.diffuseTexture.uScale = scale;
+    material.diffuseTexture.vScale = scale;
+    material.bumpTexture = new BABYLON.Texture("https://i.imgur.com/trVqO4G.jpg", scene);
+    material.bumpTexture.uScale = scale;
+    material.bumpTexture.vScale = scale;
+    material.bumpTexture.level = 1;
+    material.ambientTexture = new BABYLON.Texture("https://i.imgur.com/FwiFn1fg.jpg", scene);
+    material.ambientTexture.uScale = scale;
+    material.ambientTexture.vScale = scale;
+    material.specularTexture = new BABYLON.Texture("https://i.imgur.com/80WQRJV.png", scene);
+    material.specularTexture.uScale = scale;
+    material.specularTexture.vScale = scale;
+    material.specularPower = 50;
+    material.useGlossinessFromSpecularMapAlpha = true;
+    material.roughness = 5;
+
 
     this._model = BABYLON.MeshBuilder.CreateGround(
       'ground',
@@ -73,6 +90,8 @@ export default class Field {
         subdivisions: this._width / 2,
       },
       scene);
+
+    this._model.applyDisplacementMap('http://i.imgur.com/80WQRJVg.png', 20, 60);
 
     this._model.material = material;
   }
