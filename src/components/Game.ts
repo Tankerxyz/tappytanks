@@ -74,7 +74,7 @@ export default class Game {
 
   // todo use as configured io and socket for whole app
   createConnection(): void {
-    const url = `ws://${process.env.API_HOST}${process.env.API_PORT ? ':'+process.env.API_PORT : ''}`;
+    const url = process.env.API_URL;
 
     // todo for testing deployment
     console.log(url);
