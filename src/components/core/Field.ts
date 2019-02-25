@@ -61,39 +61,57 @@ export default class Field {
   }
 
   private generateModel(scene: BABYLON.Scene) {
-    // todo move to incapsulate component
-    const scale = 3;
-    const material = new BABYLON.StandardMaterial("ground-material", scene) as any;
-    material.diffuseTexture = new BABYLON.Texture("https://i.imgur.com/5hIPReh.jpg", scene);
-    material.diffuseTexture.uScale = scale;
-    material.diffuseTexture.vScale = scale;
-    material.bumpTexture = new BABYLON.Texture("https://i.imgur.com/trVqO4G.jpg", scene);
-    material.bumpTexture.uScale = scale;
-    material.bumpTexture.vScale = scale;
-    material.bumpTexture.level = 1;
-    material.ambientTexture = new BABYLON.Texture("https://i.imgur.com/FwiFn1fg.jpg", scene);
-    material.ambientTexture.uScale = scale;
-    material.ambientTexture.vScale = scale;
-    material.specularTexture = new BABYLON.Texture("https://i.imgur.com/80WQRJV.png", scene);
-    material.specularTexture.uScale = scale;
-    material.specularTexture.vScale = scale;
-    material.specularPower = 50;
-    material.useGlossinessFromSpecularMapAlpha = true;
-    material.roughness = 5;
+    const getGroundMaterial = (diffUrl: string, bumpUrl: string, uScale: number, vScale: number) => {
+      const material = new BABYLON.StandardMaterial("material", scene) as any;
+      material.diffuseTexture = new BABYLON.Texture(diffUrl, scene);
+      material.diffuseTexture.uScale = uScale;
+      material.diffuseTexture.vScale = vScale;
+      material.bumpTexture = new BABYLON.Texture(bumpUrl, scene);
+      material.bumpTexture.uScale = uScale;
+      material.bumpTexture.vScale = vScale;
+      material.bumpTexture.level = 0.5;
+      material.useParallax = true;
+      material.useParallaxOcclusion = true;
+      material.parallaxScaleBias = 1;
+      material.specularPower = 600.0;
+      material.specularColor = new BABYLON.Color3(0.5, 0.5, 0.5);
 
+      return material;
+    };
+
+    const frontGroundMaterial = getGroundMaterial("https://i.imgur.com/x8pq3xG.jpg", "https://i.imgur.com/OoOuuKG.png", 9, 9);
+    const sideGroundMaterial = getGroundMaterial("https://i.imgur.com/PTLgCON.jpg", "https://i.imgur.com/GiVYQmj.png", 9, 0.5);
 
     this._model = BABYLON.MeshBuilder.CreateGround(
       'ground',
       {
         width: this._width,
         height: this._height,
-        subdivisions: this._width / 2,
+        subdivisions: this._width / 2
       },
       scene);
+    this._model.material = frontGroundMaterial;
 
-    this._model.applyDisplacementMap('http://i.imgur.com/80WQRJVg.png', 20, 60);
+    // creation left, right, front, back sides of ground
+    const planeZB = BABYLON.MeshBuilder.CreatePlane("myPlane", {
+      width: this._width,
+      height: 1
+    }, scene);
+    planeZB.material = sideGroundMaterial;
+    planeZB.position.y = -0.5;
 
-    this._model.material = material;
+    const planeZF = planeZB.clone();
+    const planeXB = planeZB.clone();
+    const planeXF = planeZB.clone();
+
+    planeZB.position.z = -(this._width / 2);
+    planeZF.position.z = this._width / 2;
+    planeXB.position.x = -(this._height / 2);
+    planeXF.position.x = this._height / 2;
+
+    planeZF.rotation.y = Math.PI;
+    planeXB.rotation.y = Math.PI / 2;
+    planeXF.rotation.y = -(Math.PI / 2);
   }
 
   private createDebugLayerLines(step: number) {
