@@ -20,6 +20,7 @@
   "homepage": "https://github.com/Tankerxyz/tappytanks#readme",
   "dependencies": {
     "@types/socket.io-client": "^1.4.32",
+    "axios": "^0.18.0",
     "babylonjs": "^4.0.0-alpha.29",
     "babylonjs-gui": "^4.0.0-alpha.29",
     "babylonjs-inspector": "^4.0.0-alpha.29",

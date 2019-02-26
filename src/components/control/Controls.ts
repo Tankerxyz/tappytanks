@@ -25,9 +25,7 @@ export default class Controls {
       'rotation',
       () => {
         const { x, y, z } = movableObject.rotation;
-        const newRotation = new BABYLON.Vector3(x, y, z - Math.PI/2);
-
-        camera.rotationOffset = (newRotation.z)*180/Math.PI;
+        const newRotation = new BABYLON.Vector3(x, y - Math.PI/2, z);
 
         net.changeRotation(newRotation);
 
@@ -47,9 +45,7 @@ export default class Controls {
       'rotation',
       () => {
         const { x, y, z } = movableObject.rotation;
-        const newRotation = new BABYLON.Vector3(x, y, z + Math.PI/2);
-
-        camera.rotationOffset = (newRotation.z)*180/Math.PI;
+        const newRotation = new BABYLON.Vector3(x, y + Math.PI/2, z);
 
         net.changeRotation(newRotation);
 
@@ -69,12 +65,12 @@ export default class Controls {
       'position',
       () => {
         const { x, y, z } = movableObject.position;
-        const { newX, newZ } = normalizeNewPositionFromRotationZ(movableObject.rotation.z);
+        const { newX, newZ } = normalizeNewPositionFromRotationZ(movableObject.rotation.y);
 
         // todo add collisionNormalizer to the server
         const newPosition = collisionNormalizer(new BABYLON.Vector3(Math.round(x - newX), y, Math.round(z - newZ)), movableObject.position);
 
-        net.changePosition(newPosition);
+        // net.changePosition(newPosition);
 
         return  [{
           frame: 0,
@@ -91,7 +87,7 @@ export default class Controls {
       'position',
       () => {
         const { x, y, z } = movableObject.position;
-        const { newX, newZ } = normalizeNewPositionFromRotationZ(movableObject.rotation.z);
+        const { newX, newZ } = normalizeNewPositionFromRotationZ(movableObject.rotation.y);
 
         const newPosition = collisionNormalizer(new BABYLON.Vector3(Math.round(x + newX), y,Math.round(z + newZ)), movableObject.position);
 

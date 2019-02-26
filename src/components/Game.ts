@@ -159,7 +159,7 @@ export default class Game {
       lockedTarget
     );
 
-    this._camera.rotationOffset = lockedTarget.rotation.z*180/Math.PI;
+    this._camera.rotationOffset = lockedTarget.rotation.y*180/Math.PI;
     this._camera.cameraAcceleration = 0.04;
     this._camera.radius = 6;
     this._camera.heightOffset = 3;

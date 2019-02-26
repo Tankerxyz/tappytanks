@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import 'babylonjs-loaders';
 import PlayerAnimationCtrl from './PlayerAnimationCtrl';
 import PlayerGUI from './PlayerGUI';
 
@@ -65,11 +66,69 @@ export default class Player {
     rotation: BABYLON.Vector3
     ): void {
 
-      this._model = BABYLON.MeshBuilder.CreateCylinder(
+    var url = "https://likablemeekdiscussion--viktorgavrilov.repl.co/models/Tank_fbx.FBX";
+
+
+
+    BABYLON.SceneLoader.ImportMesh("", "https://likablemeekdiscussion--viktorgavrilov.repl.co/models/",
+      "Tank_fbx.glb", this._scene, (meshes, ...args) => {
+      const tankMesh = meshes[1];
+      tankMesh.scaling.set(1.5, 1.5, 1.5);
+      tankMesh.position.set(0, 2, 0)// = this._model.position.clone();
+      tankMesh.rotation.set(0, 1, 0);
+      tankMesh.parent = this._model;
+
+      // @ts-ignore
+      window.model = this._model
+
+      // tankMesh.rotation.set(0, this._model.rotation.y, 0);
+      console.log(meshes, args);
+
+    });
+
+    // const loader = BABYLON.SceneLoader.Load("https://likablemeekdiscussion--viktorgavrilov.repl.co/models/", "Tank_fbx.glb", this._scene.getEngine(),  (scene) => {
+    //   // Create a default arc rotate camera and light.
+    //
+    //   console.log(scene);
+    //
+    //   // scene.createDefaultCameraOrLight(true, true, true);
+    //
+    //   // // The default camera looks at the back of the asset.
+    //   // // Rotate the camera by 180 degrees to the front of the asset.
+    //   // scene.activeCamera.alpha += Math.PI;
+    //
+    //   // this._model = scene.;
+    //   this._model.position = position;
+    //   this._model.rotation = rotation;
+    // }) as any;
+    //
+    // let tankModel: any = null;
+    // let tankMaterial: any = null;
+    //
+    // loader.onMeshLoaded = (mesh: any) => {
+    //   console.log('mesh: ', mesh);
+    //   tankModel = mesh;
+    // };
+    //
+    // loader.onMaterialLoaded = (material: any) => {
+    //   console.log('material: ', material);
+    //   tankMaterial = material;
+    // };
+    //
+    // loader.onComplete = () => {
+    //   console.log('complete');
+    //   this._model.dispose();
+    //   this._model = tankModel;
+    //   this._model.material = tankMaterial;
+    //   this._model.position = position;
+    //   this._model.rotation = rotation;
+    // };
+
+      this._model = BABYLON.MeshBuilder.CreateBox(
         `playerModel${this.userID}`, {
-          diameterTop: 0,
+          width: 1,
           height: 1,
-          tessellation: 96
+          depth: 2
         },
         this._scene);
       this._model.position = position;
