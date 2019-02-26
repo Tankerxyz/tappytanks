@@ -19,18 +19,18 @@ export default class PlayersController {
   }
 
   public removePlayer(player: any): void {
-    const playerToRemove = this.players.filter(({ id }) => id === player.id)[0];
+    const playerToRemove = this.players.filter(({ userID }) => userID === player.userID)[0];
     this.players.splice(this.players.indexOf(playerToRemove), 1);
     playerToRemove.dispose();
   }
 
   public changePlayerRotation(player: any): void {
-    const playerToChange = this.players.filter(({ id }) => id === player.id)[0];
+    const playerToChange = this.players.filter(({ userID }) => userID === player.userID)[0];
     playerToChange.setRotation(player.rotation);
   }
 
   public changePlayerPosition(player: any): void {
-    const playerToChange = this.players.filter(({ id }) => id === player.id)[0];
+    const playerToChange = this.players.filter(({ userID }) => userID === player.userID)[0];
     playerToChange.setPosition(player.position);
   }
 

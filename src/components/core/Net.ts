@@ -9,7 +9,8 @@ export interface NetOpts {
   events: {
     onField: (field: FieldControllerOpts) => void,
     onCreatePlayerSuccess: (player: any) => void,
-  }
+  },
+  query: object
 }
 
 export default class Net {
@@ -18,7 +19,8 @@ export default class Net {
 
   constructor(options: NetOpts) {
     const socket = io(options.url, {
-      forceNew: true
+      forceNew: true,
+      query: options.query
     });
     this.socket = socket;
     this.playersCtrl = options.playersCtrl;

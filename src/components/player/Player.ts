@@ -12,7 +12,7 @@ interface PlayerOptions {
   rotation: BABYLON.Vector3,
   stat: Statistic,
   color: string;
-  id: string;
+  userID: string;
   animatable?: boolean,
   withGui?: boolean,
 }
@@ -20,9 +20,9 @@ interface PlayerOptions {
 const maxFrame = 6;
 
 export default class Player {
-  private _id: string;
-  get id() { return this._id; }
-  set id(value: string) { this._id = value; }
+  private _userID: string;
+  get userID() { return this._userID; }
+  set userID(value: string) { this._userID = value; }
 
   private _model: BABYLON.Mesh;
   get model() { return this._model; }
@@ -35,18 +35,18 @@ export default class Player {
   private playerMaterial: BABYLON.StandardMaterial;
 
   constructor(options: PlayerOptions, scene: BABYLON.Scene) {
-    this._id = options.id;
+    this._userID = options.userID;
     this._scene = scene;
     this.createModel(options.position, options.rotation);
     this.stat = options.stat;
 
     if (options.animatable) {
-      this.animationCtrl = new PlayerAnimationCtrl(maxFrame, this._model, scene, this.id);
+      this.animationCtrl = new PlayerAnimationCtrl(maxFrame, this._model, scene, this.userID);
     }
 
     // temp
     if (options.withGui) {
-      const text = `Player: (${this._id})
+      const text = `Player: (${this._userID})
       hp: ${this.stat.hp}/${this.stat.maxHp}`;
       this.gui = new PlayerGUI({ text, model: this.model });
     }
@@ -66,7 +66,7 @@ export default class Player {
     ): void {
 
       this._model = BABYLON.MeshBuilder.CreateCylinder(
-        `playerModel${this.id}`, {
+        `playerModel${this.userID}`, {
           diameterTop: 0,
           height: 1,
           tessellation: 96
@@ -75,7 +75,7 @@ export default class Player {
       this._model.position = position;
       this._model.rotation = rotation;
 
-      this.playerMaterial = new BABYLON.StandardMaterial(`playerMaterial${this.id}`, this._scene);
+      this.playerMaterial = new BABYLON.StandardMaterial(`playerMaterial${this.userID}`, this._scene);
       this.playerMaterial.diffuseColor = new BABYLON.Color3(0.9, 0.9, 0.9);
 
       this._model.material = this.playerMaterial;

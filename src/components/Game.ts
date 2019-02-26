@@ -8,6 +8,7 @@ import Stats from 'stats.js';
 
 import PlayersController from './player/PlayersController';
 import Net from './core/Net';
+import axios from 'axios';
 
 // todo
 declare var process: any;
@@ -78,14 +79,19 @@ export default class Game {
   }
 
   // todo use as configured io and socket for whole app
-  createConnection(): void {
+  async createConnection(): Promise<void> {
     const url = process.env.API_URL;
 
     // todo for testing deployment
     console.log(url);
 
+    const { data: { userID } } = await axios.get('http://localhost:3000/session', { withCredentials: true });
+
     this.net = new Net({
       url,
+      query: {
+        userID
+      },
       playersCtrl: this.playersCtrl,
       events: {
         onField: this.onField,
@@ -121,7 +127,7 @@ export default class Game {
 
   onCreatePlayerSuccess = (player: any) => {
     console.log('create-player-success: ', player);
-    this._mainPlayer.id = player.id;
+    this._mainPlayer.userID = player.userID;
     this._mainPlayer.setPosition(player.position);
     this._mainPlayer.setRotation(player.rotation);
     this._mainPlayer.changeColor(player.color);
@@ -176,7 +182,7 @@ export default class Game {
       rotation: new BABYLON.Vector3(-Math.PI / 2, 0, 0),
       color: '#ffffff',
       stat: { hp: 100, maxHp: 100},
-      id: 'temp-id',
+      userID: 'temp-userID',
     }, this._scene);
   }
 
