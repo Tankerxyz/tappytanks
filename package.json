@@ -20,9 +20,10 @@
   "homepage": "https://github.com/Tankerxyz/tappytanks#readme",
   "dependencies": {
     "@types/socket.io-client": "^1.4.32",
-    "babylonjs": "^4.0.0-alpha.7",
-    "babylonjs-gui": "^4.0.0-alpha.7",
-    "babylonjs-loaders": "^4.0.0-alpha.7",
+    "babylonjs": "^4.0.0-alpha.29",
+    "babylonjs-gui": "^4.0.0-alpha.29",
+    "babylonjs-inspector": "^4.0.0-alpha.29",
+    "babylonjs-loaders": "^4.0.0-alpha.29",
     "cannon": "^0.6.2",
     "clean-webpack-plugin": "^0.1.19",
     "concurrently": "^4.1.0",

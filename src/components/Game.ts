@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import 'babylonjs-inspector';
 import Field, { FieldControllerOpts } from './core/Field';
 import MoveController from './control/MoveController';
 import Player from './player/Player';
@@ -44,7 +45,11 @@ export default class Game {
   createScene(): void {
     this._scene = new BABYLON.Scene(this._engine);
     this._scene.actionManager = new BABYLON.ActionManager(this._scene);
-    this._scene.debugLayer.show();
+
+    if (process.env.NODE_ENV === 'development') {
+      this._scene.debugLayer.show();
+    }
+
 
     this.createMainLight();
     this.createSkybox();
