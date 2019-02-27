@@ -66,24 +66,27 @@ export default class Player {
     rotation: BABYLON.Vector3
     ): void {
 
-    var url = "https://likablemeekdiscussion--viktorgavrilov.repl.co/models/Tank_fbx.FBX";
+    const rootUrl = "https://likablemeekdiscussion--viktorgavrilov.repl.co/models/";
 
-    BABYLON.SceneLoader.ImportMesh("", "https://likablemeekdiscussion--viktorgavrilov.repl.co/models/",
-      "Tank_fbx.glb", this._scene, (meshes) => {
-      const scaling = 1.58;
-      const heightOffset = -0.763;
-      const widthOffset = 0.13;
+    BABYLON.SceneLoader.ImportMesh("", rootUrl,
+      "Tank_T1.obj", this._scene, (meshes) => {
+      const scaling = 15.9;
+      const heightOffset = -1.13;
+      const widthOffset = 0.06;
+      const tankMesh = meshes[0]; // T1 model
 
-      const wrapperMesh = BABYLON.MeshBuilder.CreateBox("wrapperMesh", {size: 1}, this._scene);
-      wrapperMesh.rotation.y = -(Math.PI / 2);
-      wrapperMesh.visibility = 0;
-      wrapperMesh.parent = this._model;
+      const tankMaterial = new BABYLON.StandardMaterial("tankMaterial"+this.userID, this._scene);
+      tankMaterial.diffuseTexture = new BABYLON.Texture(rootUrl+'Textures/Diffuse.jpg', this._scene);
+      // @ts-ignore
+      tankMaterial.diffuseColor = this._model.material.diffuseColor;
+      tankMaterial.bumpTexture = new BABYLON.Texture(rootUrl+'Textures/Normal.jpg', this._scene);
+      tankMaterial.specularTexture = new BABYLON.Texture(rootUrl+'Textures/Specular.jpg', this._scene);
 
-      const tankMesh = meshes[1]; // T1 model
       tankMesh.scaling.set(scaling, scaling, scaling);
-      tankMesh.position.set(widthOffset, heightOffset, 0)
-      tankMesh.rotation.set(0, 0, 0);
-      tankMesh.parent = wrapperMesh;
+      tankMesh.position.set(0, heightOffset, widthOffset);
+      tankMesh.rotation.y = -(Math.PI / 2);
+      tankMesh.material = tankMaterial;
+      tankMesh.parent = this._model;
     });
 
       this._model = BABYLON.MeshBuilder.CreateBox(
