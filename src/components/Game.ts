@@ -80,15 +80,10 @@ export default class Game {
 
   // todo use as configured io and socket for whole app
   async createConnection(): Promise<void> {
-    const url = process.env.API_URL;
-
-    // todo for testing deployment
-    console.log(url);
-
-    const { data: { userID } } = await axios.get('http://localhost:3000/session', { withCredentials: true });
+    const { data: { userID } } = await axios.get(process.env.API_URI+'/session', { withCredentials: true });
 
     this.net = new Net({
-      url,
+      url: process.env.API_WS_URI,
       query: {
         userID
       },

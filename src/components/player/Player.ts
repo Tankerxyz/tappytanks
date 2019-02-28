@@ -78,7 +78,8 @@ export default class Player {
       const tankMaterial = new BABYLON.StandardMaterial("tankMaterial"+this.userID, this._scene);
       tankMaterial.diffuseTexture = new BABYLON.Texture(rootUrl+'Textures/Diffuse.jpg', this._scene);
       // @ts-ignore
-      tankMaterial.diffuseColor = this._model.material.diffuseColor;
+      // todo research how to change color properly
+      // tankMaterial.diffuseColor = this._model.material.diffuseColor;
       tankMaterial.bumpTexture = new BABYLON.Texture(rootUrl+'Textures/Normal.jpg', this._scene);
       tankMaterial.specularTexture = new BABYLON.Texture(rootUrl+'Textures/Specular.jpg', this._scene);
 
