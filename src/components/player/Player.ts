@@ -68,6 +68,9 @@ export default class Player {
 
     const rootUrl = "https://likablemeekdiscussion--viktorgavrilov.repl.co/models/";
 
+    const myMesh = BABYLON.MeshBuilder.CreateBox("myMesh", {size: 1}, this._scene);
+    myMesh.visibility = 0;
+
     BABYLON.SceneLoader.ImportMesh("", rootUrl,
       "Tank_T1.obj", this._scene, (meshes) => {
       const scaling = 15.9;
@@ -88,6 +91,29 @@ export default class Player {
       tankMesh.rotation.y = -(Math.PI / 2);
       tankMesh.material = tankMaterial;
       tankMesh.parent = this._model;
+
+      myMesh.parent = this._model;
+
+      const antennaScaling = 0.01;
+      myMesh.scaling.set(antennaScaling, 0.008, antennaScaling);
+      myMesh.position.set(-0.25, -0.18, 0.5);
+
+
+      BABYLON.SceneLoader.ImportMesh("", rootUrl, 'antenna.obj', this._scene, (meshes) => {
+        console.log(meshes);
+
+        const signalMesh = BABYLON.MeshBuilder.CreateSphere("mySignal", { segments: 20, diameter: 0.1 }, this._scene);
+        signalMesh.parent = myMesh;
+        signalMesh.position.set(0, 0, 0);
+
+        meshes.forEach((m) => {
+          const material = new BABYLON.StandardMaterial('myMat', this._scene);
+          // #212121
+          material.diffuseColor = BABYLON.Color3.FromHexString("#212121");
+          m.parent = myMesh;
+          m.material = material;
+        })
+      })
     });
 
       this._model = BABYLON.MeshBuilder.CreateBox(
