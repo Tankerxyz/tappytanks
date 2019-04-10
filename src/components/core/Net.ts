@@ -44,7 +44,7 @@ export default class Net {
     this.socket.on('player-leaved', (playerId: string) => {
       console.log('player-leaved: ', playerId);
 
-      this.playersCtrl.removePlayer({id: playerId});
+      this.playersCtrl.removePlayer({userID: playerId});
     });
 
 
