@@ -100,11 +100,16 @@ export default class Player {
 
 
       BABYLON.SceneLoader.ImportMesh("", rootUrl, 'antenna.obj', this._scene, (meshes) => {
-        console.log(meshes);
 
-        const signalMesh = BABYLON.MeshBuilder.CreateSphere("mySignal", { segments: 20, diameter: 0.1 }, this._scene);
+        const signalMesh = BABYLON.MeshBuilder.CreateBox("mySignal", { width: 1, depth: 1, height: 10 }, this._scene);
         signalMesh.parent = myMesh;
-        signalMesh.position.set(0, 0, 0);
+        signalMesh.position.set(3.5, 139, -5.5);
+
+        const signalMaterial = new BABYLON.StandardMaterial('signalMaterial', this._scene);
+        signalMesh.material = signalMaterial;
+        signalMaterial.diffuseColor = this.playerMaterial.diffuseColor.clone();
+        signalMaterial.emissiveColor = this.playerMaterial.diffuseColor.clone();
+        signalMaterial.alpha = 0.6;
 
         meshes.forEach((m) => {
           const material = new BABYLON.StandardMaterial('myMat', this._scene);
@@ -113,6 +118,7 @@ export default class Player {
           m.parent = myMesh;
           m.material = material;
         })
+
       })
     });
 
