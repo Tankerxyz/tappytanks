@@ -70,7 +70,7 @@ export default class Controls {
         // todo add collisionNormalizer to the server
         const newPosition = collisionNormalizer(new BABYLON.Vector3(Math.round(x - newX), y, Math.round(z - newZ)), movableObject.position);
 
-        // net.changePosition(newPosition);
+        net.changePosition(newPosition);
 
         return  [{
           frame: 0,
