@@ -69,7 +69,7 @@ export default class Game {
     skyboxMaterial.backFaceCulling = false;
 
     // todo change build settings for using my files
-    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("https://www.babylonjs-playground.com/textures/skybox", this._scene);
+    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("models/skybox/skybox", this._scene);
 
     skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
     skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);

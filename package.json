@@ -29,7 +29,6 @@
     "cannon": "^0.6.2",
     "clean-webpack-plugin": "^0.1.19",
     "concurrently": "^4.1.0",
-    "copy-webpack-plugin": "^4.6.0",
     "cross-env": "^5.2.0",
     "css-loader": "^1.0.1",
     "dotenv": "^6.2.0",
@@ -61,6 +60,7 @@
     "webpack-merge": "^4.2.1"
   },
   "devDependencies": {
+    "copy-webpack-plugin": "^4.6.0",
     "cz-conventional-changelog": "^2.1.0"
   },
   "config": {

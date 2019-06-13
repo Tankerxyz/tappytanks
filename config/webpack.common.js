@@ -74,7 +74,10 @@ module.exports = {
 		}),
     new DotenvPlugin({
       path: path.resolve(__dirname, `../.env.${process.env.NODE_ENV}`),
-    })
+    }),
+    new CopyWebpackPlugin([{
+      from: 'src/models', to: 'models'
+    }])
 	],
 	optimization: {
 		namedChunks: true,

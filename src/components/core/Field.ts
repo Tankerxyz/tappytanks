@@ -51,7 +51,7 @@ export default class Field {
         size: wall.size
       }, this._scene);
       const material = new BABYLON.StandardMaterial(`fialdWallMat${i}`, this._scene);
-      material.diffuseTexture = new BABYLON.Texture("https://www.babylonjs-playground.com/textures/crate.png", this._scene);
+      material.diffuseTexture = new BABYLON.Texture("models/crate/crate.png", this._scene);
       material.diffuseTexture.hasAlpha = true;
       fieldWall.material = material;
       fieldWall.position = wall.position;
@@ -79,8 +79,10 @@ export default class Field {
       return material;
     };
 
-    const frontGroundMaterial = getGroundMaterial("https://i.imgur.com/x8pq3xG.jpg", "https://i.imgur.com/OoOuuKG.png", 9, 9);
-    const sideGroundMaterial = getGroundMaterial("https://i.imgur.com/PTLgCON.jpg", "https://i.imgur.com/GiVYQmj.png", 9, 0.5);
+    const rootUrl = "models/ground/";
+
+    const frontGroundMaterial = getGroundMaterial(rootUrl+"front-ground.jpg", rootUrl+"front-ground-normal.png", 9, 9);
+    const sideGroundMaterial = getGroundMaterial(rootUrl+"side-ground.jpg", rootUrl+"side-ground-normal.png", 9, 0.5);
 
     this._model = BABYLON.MeshBuilder.CreateGround(
       'ground',

@@ -66,12 +66,14 @@ export default class Player {
     rotation: BABYLON.Vector3
     ): void {
 
-    const rootUrl = "https://likablemeekdiscussion--viktorgavrilov.repl.co/models/";
+    const rootUrl = "models/";
+    const tankModelRootUrl = rootUrl+'tank/';
+    const antennaRootUrl = rootUrl+'antenna/';
 
     const myMesh = BABYLON.MeshBuilder.CreateBox("myMesh", {size: 1}, this._scene);
     myMesh.visibility = 0;
 
-    BABYLON.SceneLoader.ImportMesh("", rootUrl,
+    BABYLON.SceneLoader.ImportMesh("", tankModelRootUrl,
       "Tank_T1.obj", this._scene, (meshes) => {
       const scaling = 15.9;
       const heightOffset = -1.13;
@@ -79,12 +81,12 @@ export default class Player {
       const tankMesh = meshes[0]; // T1 model
 
       const tankMaterial = new BABYLON.StandardMaterial("tankMaterial"+this.userID, this._scene);
-      tankMaterial.diffuseTexture = new BABYLON.Texture(rootUrl+'Textures/Diffuse.jpg', this._scene);
+      tankMaterial.diffuseTexture = new BABYLON.Texture(tankModelRootUrl+'textures/Diffuse.jpg', this._scene);
       // @ts-ignore
       // todo research how to change color properly
       // tankMaterial.diffuseColor = this._model.material.diffuseColor;
-      tankMaterial.bumpTexture = new BABYLON.Texture(rootUrl+'Textures/Normal.jpg', this._scene);
-      tankMaterial.specularTexture = new BABYLON.Texture(rootUrl+'Textures/Specular.jpg', this._scene);
+      tankMaterial.bumpTexture = new BABYLON.Texture(tankModelRootUrl+'textures/Normal.jpg', this._scene);
+      tankMaterial.specularTexture = new BABYLON.Texture(tankModelRootUrl+'textures/Specular.jpg', this._scene);
 
       tankMesh.scaling.set(scaling, scaling, scaling);
       tankMesh.position.set(0, heightOffset, widthOffset);
@@ -99,7 +101,7 @@ export default class Player {
       myMesh.position.set(-0.25, -0.18, 0.5);
 
 
-      BABYLON.SceneLoader.ImportMesh("", rootUrl, 'antenna.obj', this._scene, (meshes) => {
+      BABYLON.SceneLoader.ImportMesh("", antennaRootUrl, 'antenna.obj', this._scene, (meshes) => {
 
         const signalMesh = BABYLON.MeshBuilder.CreateBox("mySignal", { width: 1, depth: 1, height: 10 }, this._scene);
         signalMesh.parent = myMesh;
