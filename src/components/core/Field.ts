@@ -114,6 +114,22 @@ export default class Field {
     planeZF.rotation.y = Math.PI;
     planeXB.rotation.y = Math.PI / 2;
     planeXF.rotation.y = -(Math.PI / 2);
+
+
+    function checkIfGroundLoaded() {
+      return sideGroundMaterial.diffuseTexture.isReady() && sideGroundMaterial.bumpTexture.isReady()
+        && frontGroundMaterial.diffuseTexture.isReady() && frontGroundMaterial.bumpTexture.isReady();
+    }
+
+    const timeoutCheck = () => {
+      if (checkIfGroundLoaded()) {
+        this._scene.getEngine().loadingScreen.hideLoadingUI();
+      } else {
+        setTimeout(timeoutCheck, 1000);
+      }
+    };
+
+    timeoutCheck();
   }
 
   private createDebugLayerLines(step: number) {

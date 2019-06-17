@@ -46,6 +46,7 @@ export default class Game {
   createScene(): void {
     this._scene = new BABYLON.Scene(this._engine);
     this._scene.actionManager = new BABYLON.ActionManager(this._scene);
+    this._engine.loadingScreen.displayLoadingUI();
 
     if (process.env.NODE_ENV === 'development') {
       this._scene.debugLayer.show();
