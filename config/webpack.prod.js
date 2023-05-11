@@ -1,6 +1,7 @@
 const WebpackMerge = require('webpack-merge');
 const common = require('./webpack.common');
 const UglifyJSWebpackPlugin = require('uglifyjs-webpack-plugin');
+const { EnvironmentPlugin } = require('webpack')
 
 module.exports = WebpackMerge(common, {
 	mode: 'production',
@@ -18,5 +19,12 @@ module.exports = WebpackMerge(common, {
 				}
 			}),
 		]
-	}
+	},
+  plugins: [
+    new EnvironmentPlugin({
+      NODE_ENV: process.env.NODE_ENV,
+      API_URI: process.env.API_URI,
+      API_WS_URI: process.env.API_WS_URI,
+    }),
+  ]
 });
