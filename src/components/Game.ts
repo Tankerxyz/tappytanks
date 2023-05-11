@@ -82,12 +82,11 @@ export default class Game {
   // todo use as configured io and socket for whole app
   async createConnection(): Promise<void> {
 
-    console.log(process.env);
-
-    const { data: { userID } } = await axios.get(process.env.API_URI+'/session', { withCredentials: true });
+    const { data: { userID } } = await axios.get (
+      'https://tappytanks-apiv2.herokuapp.com/session', { withCredentials: true });
 
     this.net = new Net({
-      url: process.env.API_WS_URI,
+      url: 'wss://tappytanks-apiv2.herokuapp.com',
       query: {
         userID
       },
