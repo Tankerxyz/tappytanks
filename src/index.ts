@@ -1,4 +1,3 @@
-import './styles/index.scss';
 import Game from './components/Game';
 import keycode from 'keycode';
 

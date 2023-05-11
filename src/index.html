@@ -9,6 +9,52 @@
     <script>eruda.init({
       useShadowDom: false
     });</script>
+    <style>
+      html, body {
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+      }
+      #renderCanvas {
+        width: 100%;
+        height: 100%;
+        touch-action: none;
+      }
+      @media (max-width: 1024px) {
+        #scene-explorer-host, #inspector-host {
+          display: none;
+        }
+        #controls {
+          user-select: none;
+          display: flex;
+          position: fixed;
+          bottom: 0;
+          right: 0;
+          width: calc((60px * 3) + 20px);
+          justify-content: space-between;
+          align-items: flex-end;
+        }
+        #controls .key {
+          width: 60px;
+          height: 60px;
+          border: 2px solid whitesmoke;
+          background: aliceblue;
+        }
+        #controls .keys {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          height: calc(60px * 2 + 10px);
+        }
+      }
+      .eruda-container .eruda-entry-btn {
+        top: 10px !important;
+      }
+
+    </style>
 </head>
 <body>
     <canvas id="renderCanvas"></canvas>
