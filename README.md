@@ -31,6 +31,17 @@ npm run dev
 Server will be available at localhost:$PORT or localhost:3030 by default
 
 ## Contributing
+Install commitizen for using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+
+```bash
+npm i -g commitizen
+```
+
+before commit use:
+
+```bash
+$ cz # for conventional commits
+```
 
 Pull requests are welcome. For major changes, please open an issue first
 to discuss what you would like to change.
