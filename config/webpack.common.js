@@ -5,6 +5,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const DotenvPlugin = require('dotenv-webpack');
 const devMode = process.env.NODE_ENV === 'development';
 
+console.log(process.env, process.env.NODE_ENV);
+
 module.exports = {
 	entry: {
 		app: path.resolve(__dirname, '../src/index.ts'),
@@ -59,7 +61,7 @@ module.exports = {
 			// favicon: path.resolve(__dirname, '../src/favicon.ico'),
 		}),
     new DotenvPlugin({
-      path: path.resolve(__dirname, `../.env.${process.env.NODE_ENV}`),
+      path: path.resolve(__dirname, `../.env`),
     }),
     new CopyWebpackPlugin([{
       from: 'src/models', to: 'models'

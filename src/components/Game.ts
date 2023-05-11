@@ -81,6 +81,9 @@ export default class Game {
 
   // todo use as configured io and socket for whole app
   async createConnection(): Promise<void> {
+
+    console.log(process.env);
+
     const { data: { userID } } = await axios.get(process.env.API_URI+'/session', { withCredentials: true });
 
     this.net = new Net({
