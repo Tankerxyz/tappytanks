@@ -37,10 +37,10 @@ Install commitizen for using [Conventional Commits](https://www.conventionalcomm
 npm i -g commitizen
 ```
 
-before commit use:
+before commit use 'cz' command and then follow the instructions:
 
 ```bash
-$ cz # for conventional commits
+$ cz
 ```
 
 Pull requests are welcome. For major changes, please open an issue first
@@ -50,3 +50,5 @@ to discuss what you would like to change.
 
 [MIT](https://choosealicense.com/licenses/mit/)
 
+### Author
+@Tankerxyz
