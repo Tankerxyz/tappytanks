@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider NODE_ENV='development' webpack-dev-server -r dotenv/config --progress --config config/webpack.dev.js",
-    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider NODE_ENV='production' webpack -r dotenv/config --config config/webpack.prod.js",
+    "build": "cross-env NODE_ENV='production' webpack -r dotenv/config --config config/webpack.prod.js",
     "version": "standard-version"
   },
   "repository": {
