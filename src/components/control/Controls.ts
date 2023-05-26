@@ -1,166 +1,195 @@
 import * as BABYLON from 'babylonjs';
 import keycode from 'keycode';
 import AnimatableAction from '../action/AnimatableAction';
-
 import { normalizeNewPositionFromRotationZ } from '../../utils';
 import Net from '../core/Net';
 
+/**
+ * Controls class for handling user input and animations.
+ */
 export default class Controls {
-  _scene: BABYLON.Scene;
-  actions: Array<AnimatableAction> = [];
-  animations: Array<BABYLON.Animation> = [];
-  movableObject: BABYLON.Mesh;
+  private _scene: BABYLON.Scene;
+  private actions: Array<AnimatableAction> = [];
+  private animations: Array<BABYLON.Animation> = [];
+  private movableObject: BABYLON.Mesh;
+  private actionStarted = false;
+  private maxFrame = 6;
 
-  actionStarted: boolean = false;
-
-  maxFrame: number = 6;
-
-  constructor(scene: BABYLON.Scene, movableObject: BABYLON.Mesh, camera: any, collisionNormalizer: any, net: Net) {
+  /**
+   * Creates an instance of Controls.
+   * @param {BABYLON.Scene} scene - The Babylon.js scene.
+   * @param {BABYLON.Mesh} movableObject - The movable object.
+   * @param {any} camera - The camera object.
+   * @param {any} collisionNormalizer - The collision normalizer object.
+   * @param {Net} net - The Net object.
+   */
+  constructor(
+    scene: BABYLON.Scene,
+    movableObject: BABYLON.Mesh,
+    camera: any,
+    collisionNormalizer: any,
+    net: Net
+  ) {
     this._scene = scene;
     this.movableObject = movableObject;
 
+    const createAnimatableAction = (
+      parameter: number,
+      animationName: string,
+      targetProperty: string,
+      getAnimationKeysFn: () => { frame: number, value: BABYLON.Vector3 }[],
+      movableObject: BABYLON.Mesh
+    ) => {
+      const animatableAction = new AnimatableAction(
+        {
+          trigger: BABYLON.ActionManager.OnKeyDownTrigger,
+          parameter,
+        },
+        new BABYLON.Animation(animationName, targetProperty, 60, BABYLON.Animation.ANIMATIONTYPE_VECTOR3),
+        getAnimationKeysFn,
+        this.beginAnimation(movableObject),
+        this.maxFrame,
+        this.canRunAction,
+        this.onActionStart,
+        this.onActionEnd,
+      );
+
+      this.actions.push(animatableAction);
+      this._scene.actionManager.registerAction(animatableAction.action);
+      this.attachAnimation(movableObject)(animatableAction.animation);
+    };
+
+    const addAnimatableAction = (
+      parameter: number,
+      animationName: string,
+      targetProperty: string,
+      getAnimationKeysFn: () => { frame: number, value: BABYLON.Vector3 }[]
+    ) => {
+      createAnimatableAction(parameter, animationName, targetProperty, getAnimationKeysFn, movableObject);
+    };
+
+    const rotateObject = (rotationDirection: number) => {
+      const { x, y, z } = movableObject.rotation;
+      const newRotation = new BABYLON.Vector3(x, y + rotationDirection * Math.PI / 2, z);
+
+      net.changeRotation(newRotation);
+
+      return [
+        {
+          frame: 0,
+          value: new BABYLON.Vector3(x, y, z),
+        },
+        {
+          frame: this.maxFrame,
+          value: newRotation,
+        },
+      ];
+    };
+
+    const moveObject = (forwardDirection: number) => {
+      const { x, y, z } = movableObject.position;
+      const { newX, newZ } = normalizeNewPositionFromRotationZ(movableObject.rotation.y);
+
+      const newPosition = collisionNormalizer(
+        new BABYLON.Vector3(Math.round(x + forwardDirection * newX), y, Math.round(z + forwardDirection * newZ)),
+        movableObject.position
+      );
+
+      net.changePosition(newPosition);
+
+      return [
+        {
+          frame: 0,
+          value: new BABYLON.Vector3(x, y, z),
+        },
+        {
+          frame: this.maxFrame,
+          value: newPosition,
+        },
+      ];
+    };
+
     // rotate left
-    this.addAnimatableAction(this.createAnimatableAction(keycode.codes.left,
+    addAnimatableAction(
+      keycode.codes.left,
       'animation_left',
       'rotation',
-      () => {
-        const { x, y, z } = movableObject.rotation;
-        const newRotation = new BABYLON.Vector3(x, y - Math.PI/2, z);
-
-        net.changeRotation(newRotation);
-
-        return  [{
-          frame: 0,
-          value: new BABYLON.Vector3(x, y, z)
-        }, {
-          frame: this.maxFrame,
-          value: newRotation,
-        }]
-      }, movableObject), movableObject);
-
+      () => rotateObject(-1),
+    );
 
     // rotate right
-    this.addAnimatableAction(this.createAnimatableAction(keycode.codes.right,
+    addAnimatableAction(
+      keycode.codes.right,
       'animation_right',
       'rotation',
-      () => {
-        const { x, y, z } = movableObject.rotation;
-        const newRotation = new BABYLON.Vector3(x, y + Math.PI/2, z);
-
-        net.changeRotation(newRotation);
-
-        return  [{
-          frame: 0,
-          value: new BABYLON.Vector3(x, y, z)
-        }, {
-          frame: this.maxFrame,
-          value: newRotation,
-        }]
-      }, movableObject), movableObject);
-
+      () => rotateObject(1),
+    );
 
     // move forward
-    this.addAnimatableAction(this.createAnimatableAction(keycode.codes.up,
+    addAnimatableAction(
+      keycode.codes.up,
       'animation_up',
       'position',
-      () => {
-        const { x, y, z } = movableObject.position;
-        const { newX, newZ } = normalizeNewPositionFromRotationZ(movableObject.rotation.y);
-
-        // todo add collisionNormalizer to the server
-        const newPosition = collisionNormalizer(new BABYLON.Vector3(Math.round(x - newX), y, Math.round(z - newZ)), movableObject.position);
-
-        net.changePosition(newPosition);
-
-        return  [{
-          frame: 0,
-          value: new BABYLON.Vector3(x, y, z)
-        }, {
-          frame: this.maxFrame,
-          value: newPosition,
-        }]
-      }, movableObject), movableObject);
+      () => moveObject(-1),
+    );
 
     // move back
-    this.addAnimatableAction(this.createAnimatableAction(keycode.codes.down,
+    addAnimatableAction(
+      keycode.codes.down,
       'animation_down',
       'position',
-      () => {
-        const { x, y, z } = movableObject.position;
-        const { newX, newZ } = normalizeNewPositionFromRotationZ(movableObject.rotation.y);
-
-        const newPosition = collisionNormalizer(new BABYLON.Vector3(Math.round(x + newX), y,Math.round(z + newZ)), movableObject.position);
-
-        net.changePosition(newPosition);
-
-        return [{
-          frame: 0,
-          value: new BABYLON.Vector3(x, y, z)
-        }, {
-          frame: this.maxFrame,
-          value: newPosition,
-        }]
-      }, movableObject), movableObject);
+      () => moveObject(1),
+    );
   }
 
-  beginAnimation(movableObject: BABYLON.Mesh) {
-    return (animationParams: [[BABYLON.Animation], number, number, boolean, number, any]) => {
-      this._scene.beginDirectAnimation(movableObject, ...animationParams);
-    };
-  }
-
-  createAnimatableAction(parameter: number,
-                         animationName: string,
-                         targetProperty: string,
-                         getAnimationKeysFn: () => Array<{frame: number, value: BABYLON.Vector3}>,
-                         movableObject: BABYLON.Mesh,
-                         ) {
-    return new AnimatableAction({
-      trigger: BABYLON.ActionManager.OnKeyDownTrigger,
-      parameter,
-    },
-      new BABYLON.Animation(animationName, targetProperty,60, BABYLON.Animation.ANIMATIONTYPE_VECTOR3),
-      getAnimationKeysFn,
-      this.beginAnimation(movableObject),
-      this.maxFrame,
-      this.canRunAction,
-      this.onActionStart,
-      this.onActionEnd,
-      );
-  }
-
-  canRunAction = () => {
-    return this.actionStarted === false;
+  /**
+   * Begins the animation of the movable object.
+   * @param {BABYLON.Mesh} movableObject - The movable object.
+   * @returns {Function} - The function to begin the animation.
+   */
+  private beginAnimation = (movableObject: BABYLON.Mesh) => (
+    animationParams: [[BABYLON.Animation], number, number, boolean, number, any]
+  ) => {
+    this._scene.beginDirectAnimation(movableObject, ...animationParams);
   };
 
-  onActionStart = () => {
+  /**
+   * Checks if an action can be run.
+   * @returns {boolean} - Indicates if the action can be run.
+   */
+  private canRunAction = () => !this.actionStarted;
+
+  /**
+   * Callback function called when an action starts.
+   */
+  private onActionStart = () => {
     this.actionStarted = true;
   };
 
-  onActionEnd = () => {
+  /**
+   * Callback function called when an action ends.
+   */
+  private onActionEnd = () => {
     this.actionStarted = false;
   };
 
-  addAnimatableAction(animatableAction: AnimatableAction, movableObject: BABYLON.Mesh) {
-    this.actions.push(animatableAction);
-    this._scene.actionManager.registerAction(animatableAction.action);
-    this.attachAnimation(movableObject)(animatableAction.animation);
-  }
+  /**
+   * Attaches an animation to the movable object.
+   * @param {BABYLON.Mesh} movableObject - The movable object.
+   * @returns {Function} - The function to attach the animation.
+   */
+  private attachAnimation = (movableObject: BABYLON.Mesh) => (animation: BABYLON.Animation) => {
+    this.animations.push(animation);
+    movableObject.animations.push(animation);
+  };
 
-  attachAnimation(movableObject: BABYLON.Mesh) {
-    return (animation: BABYLON.Animation) => {
-      this.animations.push(animation);
-      movableObject.animations.push(animation);
-    };
-  }
-
+  /**
+   * Disposes the controls and cleans up registered actions and animations.
+   */
   public dispose(): void {
     this.actions.forEach(a => this._scene.actionManager.unregisterAction(a.action));
-    delete this.actions;
-    // returns only not attached animations from this class
+    this.actions = [];
     this.movableObject.animations = this.movableObject.animations.filter(a => this.animations.indexOf(a) === -1);
-
-    // @ts-ignore
-    delete this.animations;
+    this.animations = [];
   }
 }
