@@ -30,7 +30,7 @@ export default class Game {
   private _mainPlayer: Player;
   private _moveController: MoveController;
   private _playersController: PlayersController;
-  private _missileController: MissileController;
+  private _mainPlayerMissileController: MissileController;
   private _net: Net;
   private _stats: Stats;
 
@@ -71,8 +71,10 @@ export default class Game {
     this.createSkybox();
     this.createMainPlayer();
     this.createMainCamera(this._mainPlayer.model);
-    this._playersController = new PlayersController([], this._scene);
-    this._missileController = new MissileController(this._scene, this._mainPlayer);
+    this._playersController = new PlayersController([], this._scene, this._field);
+    this._mainPlayerMissileController = new MissileController(this._scene, this._mainPlayer, this._field, () => {
+      this._net.shot();
+    });
     this.createConnection();
   }
 
@@ -121,7 +123,8 @@ export default class Game {
     this._engine.runRenderLoop(() => {
       this._scene.render();
       this._stats.update();
-      this._missileController.update();
+      this._playersController.update();
+      this._mainPlayerMissileController.update();
     });
 
     window.addEventListener('resize', () => {

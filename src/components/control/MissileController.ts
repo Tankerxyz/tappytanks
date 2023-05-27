@@ -4,71 +4,92 @@ import keycode from 'keycode';
 import { Direction } from '../types/direction';
 import Missile from '../models/Missile';
 import Player from '../player/Player';
+import Field from '../core/Field';
 
 export default class MissileController {
   private _scene: BABYLON.Scene;
   private _missiles: Missile[] = [];
   private _missileSpeed = 2; // Adjust the speed as needed
-  private _player: Player;
+  public _player: Player;
+  private _field: Field;
   private _timestampToRender: number = 1000;
 
   /**
    * Constructs a MissileController instance.
    * @param scene - The Babylon.js scene.
    * @param player - The player object.
+   * @param field
+   * @param onMainPlayerShot
    * @param withoutControls - Whether to initialize key handlers for shooting missiles.
    * @param timestampToRender - The timestamp to render for missiles.
    */
   constructor(
     scene: BABYLON.Scene,
     player: Player,
+    field: Field,
+    onMainPlayerShot: () => void = () => {},
     withoutControls: boolean = false,
     timestampToRender: number = 1000
   ) {
     this._scene = scene;
     this._player = player;
+    // todo: for collision checking
+    this._field = field;
     this._timestampToRender = timestampToRender;
 
     if (!withoutControls) {
-      this.initKeyHandler();
+      this.initKeyHandler(onMainPlayerShot);
     }
   }
 
   /**
    * Initializes the key handler to shoot missiles when the space key is pressed.
    */
-  private initKeyHandler(): void {
+  private initKeyHandler(onMainPlayerShot: () => void): void {
     document.addEventListener('keydown', (event: KeyboardEvent) => {
       if (event.keyCode === keycode('space')) {
-        const modelPosition = this._player.position;
-        const modelRotation = this._player.rotation;
 
-        const rotationY = modelRotation.y; // Get the Y-component of the model's rotation
+        // if called from here it means main player, p.s. todo refactor by moving into global key handler
+        onMainPlayerShot();
 
-        const sinY = ~~Math.sin(rotationY);
-        const cosY = ~~Math.cos(rotationY);
-
-        let direction: Direction;
-
-        if (sinY === 0) {
-          direction = cosY === 1 ? Direction.Forward : Direction.Backward;
-        } else {
-          direction = sinY === 1 ? Direction.Right : Direction.Left;
-        }
-
-        this.shootMissile(modelPosition, modelRotation, direction);
+        this.shootMissile();
       }
     });
   }
 
+  private getMissileDirection(): Direction {
+    const modelRotation = this._player.rotation;
+
+    const rotationY = modelRotation.y; // Get the Y-component of the model's rotation
+
+    const sinY = ~~Math.sin(rotationY);
+    const cosY = ~~Math.cos(rotationY);
+
+    let direction: Direction;
+
+    if (sinY === 0) {
+      direction = cosY === 1 ? Direction.Forward : Direction.Backward;
+    } else {
+      direction = sinY === 1 ? Direction.Right : Direction.Left;
+    }
+
+    return direction;
+  }
+
   /**
    * Shoots a missile from the specified position with the given direction.
-   * @param position - The position to shoot the missile from.
-   * @param rotation - The rotation of the model from which the missile is shot.
-   * @param direction - The direction of the missile.
    */
-  private shootMissile(position: BABYLON.Vector3, rotation: BABYLON.Vector3, direction: Direction): void {
-    const missile = new Missile(position, rotation, direction, this._missileSpeed, this._timestampToRender);
+  public shootMissile(): void {
+    const missileDirection = this.getMissileDirection();
+
+    const missile = new Missile(
+      this._player.position,
+      this._player.rotation,
+      missileDirection,
+      this._missileSpeed,
+      this._timestampToRender
+    );
+
     this._missiles.push(missile);
     missile.addToScene(this._scene);
   }
@@ -82,6 +103,7 @@ export default class MissileController {
     this._missiles.forEach((missile) => {
       missile.move();
 
+      // is collision then destroy collision
       if (!MissileController.isWithinBounds(missile.position)) {
         missilesToRemove.push(missile);
       }
@@ -105,18 +127,14 @@ export default class MissileController {
     // Adjust the scene bounds as needed
     const minX = -10;
     const maxX = 10;
-    const minY = 0;
-    const maxY = 10;
     const minZ = -10;
     const maxZ = 10;
 
-    // TODO: Add proper collision checks
+    // TODO: Add proper collision checks from field
 
     return (
       position.x >= minX &&
       position.x <= maxX &&
-      position.y >= minY &&
-      position.y <= maxY &&
       position.z >= minZ &&
       position.z <= maxZ
     );

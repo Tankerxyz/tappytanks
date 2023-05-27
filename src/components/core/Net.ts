@@ -59,6 +59,12 @@ export default class Net {
 
       this.playersCtrl.changePlayerPosition(player);
     });
+
+    this.socket.on('player-shot', (player: any) => {
+      console.log('player-shot', player);
+
+      this.playersCtrl.shot(player);
+    });
   }
 
   public changeRotation(newRotation: BABYLON.Vector3): void {
@@ -67,5 +73,9 @@ export default class Net {
 
   public changePosition(newPosition: BABYLON.Vector3): void {
     this.socket.emit('change-position', newPosition);
+  }
+
+  public shot(): void {
+    this.socket.emit('shot');
   }
 };
