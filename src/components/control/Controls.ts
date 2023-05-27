@@ -1,7 +1,9 @@
 import * as BABYLON from 'babylonjs';
 import keycode from 'keycode';
+
+import { normalizeNewPositionFromRotationY } from '../../utils';
+
 import AnimatableAction from '../action/AnimatableAction';
-import { normalizeNewPositionFromRotationZ } from '../../utils';
 import Net from '../core/Net';
 
 /**
@@ -68,6 +70,11 @@ export default class Controls {
       createAnimatableAction(parameter, animationName, targetProperty, getAnimationKeysFn, movableObject);
     };
 
+
+    /**
+     * Rotated the mesh with animation
+     * @param {number} rotationDirection - -1 to left, 1 to right
+     */
     const rotateObject = (rotationDirection: number) => {
       const { x, y, z } = movableObject.rotation;
       const newRotation = new BABYLON.Vector3(x, y + rotationDirection * Math.PI / 2, z);
@@ -88,7 +95,7 @@ export default class Controls {
 
     const moveObject = (forwardDirection: number) => {
       const { x, y, z } = movableObject.position;
-      const { newX, newZ } = normalizeNewPositionFromRotationZ(movableObject.rotation.y);
+      const { newX, newZ } = normalizeNewPositionFromRotationY(movableObject.rotation.y);
 
       const newPosition = collisionNormalizer(
         new BABYLON.Vector3(Math.round(x + forwardDirection * newX), y, Math.round(z + forwardDirection * newZ)),

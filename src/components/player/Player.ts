@@ -157,6 +157,14 @@ export default class Player {
     }
   }
 
+  public get position(): BABYLON.Vector3 {
+    return new BABYLON.Vector3(this._model.position.x, this._model.position.y, this._model.position.z);
+  }
+
+  public get rotation(): BABYLON.Vector3 {
+    return new BABYLON.Vector3(this._model.rotation.x, this._model.rotation.y, this._model.rotation.z);
+  }
+
   public dispose(): void {
     this._model.dispose();
     this.gui.dispose();
