@@ -1,6 +1,6 @@
 # 🚀📦 Tappy Tanks 🔋🚀
 
-A Multiplayer Tanks Game built with Babylon.js, Node.js, Socket.io & Webpack and Typescript.
+A Multiplayer 3D Web Tanks Game built with Babylon.js, Node.js, Socket.io & Webpack and Typescript.
 
 Mobile controls using custom HTML tags and ➡️⬅️⬆️⬇️ movement controls on desktop.
 
